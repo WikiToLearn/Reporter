@@ -4,7 +4,7 @@ import requests
 import datetime
 import config
 
-api_token = config.api_token
+api_token = config.phabricator_api_token
 
 def lookup_project_phab_id(name):
     return_phab_project_id = None
