@@ -1,0 +1,10 @@
+{# _reporter_app/templates/create_report.template_ #}
+
+{% extends "layout.template" %}
+{% block title %}WTL Reporter{% endblock %}
+{% block container %}
+
+
+
+
+{% endblock %}
