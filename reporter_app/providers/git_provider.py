@@ -4,8 +4,7 @@ import time
 import config
 
 
-def get_contributes_per_user(repo, weeks):
-    start_date = datetime.date.today()  -datetime.timedelta(weeks=weeks)
+def get_contributes_per_user(repo, start_date, end_date):
     while True:
         r = requests.get("https://api.github.com/repos/"+repo+ "/stats/contributors",
                          auth=(config.github_user, config.github_pass))
@@ -30,7 +29,7 @@ def get_contributes_per_user(repo, weeks):
         }
         for week in item['weeks']:
             w = datetime.date.fromtimestamp(week['w'])
-            if w >= start_date:
+            if w >= start_date and w<=end_date:
                 aut['additions']+= week['a']
                 aut['deletions']+= week['d']
                 aut['commits']+= week['c']
@@ -38,11 +37,10 @@ def get_contributes_per_user(repo, weeks):
     return result
 
 
-def get_total_contributions(repo, weeks):
-    start_date = datetime.date.today()  -datetime.timedelta(weeks=weeks)
+def get_total_contributions(repo, start_date, end_date):
     while True:
         r = requests.get("https://api.github.com/repos/"+repo+ "/stats/commit_activity",
-                         auth=('valsdav', 'Cespedosio1999'))
+                        auth=(config.github_user, config.github_pass))
         print(r.status_code)
         if r.status_code == 202:
             time.sleep(2)
@@ -60,13 +58,13 @@ def get_total_contributions(repo, weeks):
     }
     for item in data:
         w = datetime.date.fromtimestamp(item['week'])
-        if w>= start_date:
+        if w>= start_date and w<=end_date:
             result['n_commit']+= item['total']
 
     #additions and deletions
     while True:
         r2 = requests.get("https://api.github.com/repos/"+repo+ "/stats/code_frequency",
-                         auth=('valsdav', 'Cespedosio1999'))
+                         auth=(config.github_user, config.github_pass))
         print(r2.status_code)
         if r2.status_code == 202:
             time.sleep(2)
@@ -78,16 +76,8 @@ def get_total_contributions(repo, weeks):
     data2 = r2.json()
     for item in data2:
         w = datetime.date.fromtimestamp(item[0])
-        if w>= start_date:
+        if w>= start_date and w<=end_date:
             result['total_additions']+= item[1]
             result['total_deletions']+= item[2]
 
     return result
-
-
-
-if __name__ == '__main__':
-    j = get_contributes_per_user("WikiToLearn/WikiToLearn", 2)
-    j2 = get_total_contributions("WikiToLearn/WikiToLearn", 2)
-    j.update(j2)
-    print(j)

@@ -40,11 +40,11 @@ def get_all_tasks(project_phids):
         result['closed_tasks'].update(closed_tasks)
     return result
 
-def filter_task_by_date(tasks, start_date):
+def filter_task_by_date(tasks, start_date, end_date):
     result = {}
     for phid, task in tasks.items():
         d = datetime.date.fromtimestamp(int(task['dateModified']))
-        if d >= start_date:
+        if d >= start_date and d<=end_date:
             result[phid] = task
     return result
 
@@ -63,7 +63,7 @@ def get_user_metadata(phid):
     users_cache[phid] = user_data
 
 
-def count_status_transition(tasks, oldstatus, newstatus_list, start_date):
+def count_status_transition(tasks, oldstatus, newstatus_list, start_date, end_date):
     counter = 0
     users_counter = {}
     print(oldstatus, " ---> ", newstatus_list)
@@ -76,7 +76,7 @@ def count_status_transition(tasks, oldstatus, newstatus_list, start_date):
         trans = transactions_cache[task['id']]
         for t in trans:
             d = datetime.date.fromtimestamp(int(t['dateCreated']))
-            if d >= start_date and t['transactionType']=="status" and \
+            if d >= start_date and d<=end_date and t['transactionType']=="status" and \
                 t['oldValue'] == oldstatus and t['newValue'] in newstatus_list:
                     counter+=1
                     user_phid = t['authorPHID']
@@ -90,7 +90,7 @@ def count_status_transition(tasks, oldstatus, newstatus_list, start_date):
     return (counter, users_counter)
 
 
-def count_task_commented(tasks, start_date):
+def count_task_commented(tasks, start_date, end_date):
     counter = 0
     users_counter = {}
     for phid, task in tasks.items():
@@ -102,7 +102,7 @@ def count_task_commented(tasks, start_date):
         trans = transactions_cache[task['id']]
         for t in trans:
             d = datetime.date.fromtimestamp(int(t['dateCreated']))
-            if d >= start_date and t['transactionType'] == "core:comment":
+            if d >= start_date and d<=end_date and t['transactionType'] == "core:comment":
                     counter+=1
                     #getting user details
                     user_phid = t['authorPHID']
@@ -120,7 +120,7 @@ closed_status = [ "resolved",  "wontfix", "invalid",
                   "duplicate","spite"]
 notsolved_status =  ["wontfix", "invalid", "duplicate","spite"]
 
-def calculate_generic_stats(proj_phids, start_date):
+def calculate_generic_stats(proj_phids, start_date, end_date):
     result = {}
     all_tasks = get_all_tasks(proj_phids)
     result = {
@@ -128,35 +128,35 @@ def calculate_generic_stats(proj_phids, start_date):
         "total_close" : len(all_tasks['closed_tasks']),
         "users_data" : {}
     }
-    #filter with date
+    #filter by date
     filt_tasks = {
-        "open": filter_task_by_date(all_tasks['open_tasks'], start_date),
-        "close": filter_task_by_date(all_tasks['closed_tasks'], start_date)
+        "open": filter_task_by_date(all_tasks['open_tasks'], start_date, end_date),
+        "close": filter_task_by_date(all_tasks['closed_tasks'], start_date, end_date)
     }
     result["changed"] = len(filt_tasks['open'])+len(filt_tasks['close'])
     #now checking the change of status
     open_stat = count_status_transition(filt_tasks['open'],
-                                        None,["open"], start_date)
+                                        None,["open"], start_date, end_date)
     result["opened"] = open_stat[0]
     result["users_data"]["opened"] = open_stat[1]
 
     closed_stat = count_status_transition(filt_tasks['close'],"open",
-                                          closed_status, start_date)
+                                          closed_status, start_date, end_date)
     result["closed"] = closed_stat[0]
     result["users_data"]["closed"] = closed_stat[1]
 
     resolved_stat = count_status_transition(filt_tasks['close'],
-                                            "open", ["resolved"], start_date)
+                                            "open", ["resolved"], start_date, end_date)
     result["resolved"] = resolved_stat[0]
     result["users_data"]["resolved"] =  resolved_stat[1]
 
     not_resolved_stat = count_status_transition(filt_tasks['close'],
-                                             "open", notsolved_status, start_date)
+                                             "open", notsolved_status, start_date, end_date)
     result["not_resolved"] = not_resolved_stat[0]
     result["users_data"]["not_resolved"] = not_resolved_stat[1]
 
-    comments_stat = count_task_commented(filt_tasks["open"], start_date) + \
-                         count_task_commented(filt_tasks["close"], start_date)
+    comments_stat = count_task_commented(filt_tasks["open"], start_date, end_date) + \
+                         count_task_commented(filt_tasks["close"], start_date, end_date)
     result["commented"] =  comments_stat[0]
     result["users_data"]["comments"] =  comments_stat[1]
 
