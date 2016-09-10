@@ -2,9 +2,9 @@
 import json
 import requests
 import datetime
-import config
+import reporter_app.providers.provider_config as pconfig
 
-api_token = config.phabricator_api_token
+api_token = pconfig.phabricator_api_token
 
 def lookup_project_phab_id(name):
     return_phab_project_id = None
@@ -26,6 +26,7 @@ def make_phab_query(entrypoint, data):
         return response.json()['result']
 
 def get_all_tasks(project_phids):
+    print("Getting all tasks...")
     result = {"open_tasks":{}, "closed_tasks":{}}
     for project_phid in project_phids:
         data = {}
@@ -41,6 +42,7 @@ def get_all_tasks(project_phids):
     return result
 
 def filter_task_by_date(tasks, start_date, end_date):
+    print("Filtering tasks...")
     result = {}
     for phid, task in tasks.items():
         d = datetime.date.fromtimestamp(int(task['dateModified']))
@@ -157,7 +159,7 @@ def calculate_generic_stats(proj_phids, start_date, end_date):
 
     comments_stat = count_task_commented(filt_tasks["open"], start_date, end_date) + \
                          count_task_commented(filt_tasks["close"], start_date, end_date)
-    result["commented"] =  comments_stat[0]
+    result["comments"] =  comments_stat[0]
     result["users_data"]["comments"] =  comments_stat[1]
 
     return result

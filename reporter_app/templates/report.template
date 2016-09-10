@@ -60,11 +60,11 @@
                 <tbody>
                     {% for pr in ph_projects %}
                     <tr>
-                        <th scope="row">{{pr.name}}</th>
-                        <td>{{pr.opened_tasks}}</td>
-                        <td>{{pr.closed_tasks}}</td>
-                        <td>{{pr.comments}}</td>
-                        <td>{{pr.total_tasks}}</td>
+                        <th scope="row">{{pr}}</th>
+                        <td>{{ph_projects[pr]["opened"]}}</td>
+                        <td>{{ph_projects[pr]["closed"]}}</td>
+                        <td>{{ph_projects[pr]["comments"]}}</td>
+                        <td>{{ph_projects[pr]["total_open"]}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -95,10 +95,10 @@
                         <tbody>
                             {% for dev in git_devs %}
                             <tr>
-                                <th scope="row">{{dev.name}}</th>
-                                <td>{{dev.commits}}</td>
-                                <td>{{dev.addictions}}</td>
-                                <td>{{dev.deletions}}</td>
+                                <th scope="row">{{dev[name]}}</th>
+                                <td>{{dev[commits]}}</td>
+                                <td>{{dev[addictions]}}</td>
+                                <td>{{dev[deletions]}}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -119,10 +119,10 @@
                         <tbody>
                             {% for pr in git_projects %}
                             <tr>
-                                <td scope="row">{{pr.name}}</td>
-                                <td>{{pr.commits}}</td>
-                                <td>{{pr.addictions}}</td>
-                                <td>{{pr.delections}}</td>
+                                <td scope="row">{{pr[name]}}</td>
+                                <td>{{pr[commits]}}</td>
+                                <td>{{pr[addictions]}}</td>
+                                <td>{{pr[delections]}}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
