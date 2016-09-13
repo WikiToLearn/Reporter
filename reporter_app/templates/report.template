@@ -71,10 +71,10 @@
                 <tfoot>
                     <tr>
                         <th scope="row"></th>
-                        <th>{{total_ph_opened_tasks}}</th>
-                        <th>{{total_closed_ph_tasks}}</th>
-                        <th>{{total_ph_comments}}</th>
-                        <th>{{total_ph_tasks}}</th>
+                        <th>{{total_ph["opened"]}}</th>
+                        <th>{{total_ph["closed"]}}</th>
+                        <th>{{total_ph["comments"]}}</th>
+                        <th>{{total_ph["total_open"]}}</th>
                     </tr>
                 </tfoot>
             </table>
@@ -179,7 +179,7 @@
                 <div class="text-center">
                     <a aria-label="Follow @WikiToLearn on GitHub"
                             data-count-aria-label="# followers on GitHub"
-                            data-style="mega" href="https://github.com/WikiToLearn" 
+                            data-style="mega" href="https://github.com/WikiToLearn"
                             class="github-button">Follow @WikiToLearn</a>
                 </div>
             </div>
