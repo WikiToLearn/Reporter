@@ -6,11 +6,24 @@ import reporter_app.providers.provider_config as pconfig
 
 api_token = pconfig.phabricator_api_token
 
-def lookup_project_phab_id(name):
+def lookup_project_phabid_byname(name):
     return_phab_project_id = None
     data_query = {}
     data_query['api.token'] = api_token
     data_query['names[]'] = name
+    url_query = 'https://phabricator.kde.org/api/project.query'
+    response_query = requests.get(url_query, data=data_query)
+    data_query_in = json.loads(response_query.content.decode('UTF-8'))
+    if data_query_in['result'] != None:
+        for phab_project_id in data_query_in['result']['data']:
+            return_phab_project_id = phab_project_id
+    return return_phab_project_id
+
+def lookup_project_phabid_byid(id):
+    return_phab_project_id = None
+    data_query = {}
+    data_query['api.token'] = api_token
+    data_query['ids[]'] = id
     url_query = 'https://phabricator.kde.org/api/project.query'
     response_query = requests.get(url_query, data=data_query)
     data_query_in = json.loads(response_query.content.decode('UTF-8'))

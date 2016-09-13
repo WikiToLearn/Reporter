@@ -175,9 +175,12 @@
             <img src="http://i.imgur.com/PLvzmeV.png" class="img-responsive" />
             <!-- <h2 class="text-center">Join WikiToLearn!</h2> -->
             <p class=lead>
-                If you are interested, see what you can do, chat with us, send us <a href="mailto:info@wikitolearn.org">an e-mail</a>, or simply <a href="https://github.com/AkhetLab/">check out our source code</a>!</p>
+                If you are interested, see what you can do, chat with us, send us <a href="mailto:info@wikitolearn.org">an e-mail</a>, or simply <a href="https://github.com/WikiToLearn">check out our source code</a>!</p>
                 <div class="text-center">
-                    <a aria-label="Follow @WikiToLearn on GitHub" data-count-aria-label="# followers on GitHub" data-style="mega" href="https://github.com/WikiToLearn" class="github-button">Follow @WikiToLearn</a>
+                    <a aria-label="Follow @WikiToLearn on GitHub"
+                            data-count-aria-label="# followers on GitHub"
+                            data-style="mega" href="https://github.com/WikiToLearn" 
+                            class="github-button">Follow @WikiToLearn</a>
                 </div>
             </div>
 
