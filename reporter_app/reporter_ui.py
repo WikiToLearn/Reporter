@@ -1,5 +1,5 @@
 from reporter_app import app
-from flask import render_template, jsonify, request
+from flask import render_template, jsonify, request, abort
 import datetime
 import reporter_app.data_aggregator as dagg
 
@@ -11,11 +11,16 @@ def manager():
 @app.route('/report/<id>', methods=['GET'])
 def report(id):
     #getting data for the dates
+    if id not in dagg.datas:
+        return abort(404)
     data = dagg.datas[id]
+    #total statistics
+    totals_ph = dagg.calculate_totals_phabricator(id)
     totals_git = dagg.calculate_totals_git(id)
     return render_template('report.template',
                            ph_projects = data["phabricator"],
-                           ph_totals = dagg.calculate_totals_phabricator(id),
+                           ph_totals = totals_ph,
+                           ph_devs = totals_ph['users_stats'],
                            git_projs = data["git"],
                            git_totals = totals_git,
                            git_devs = totals_git["users_stats"]

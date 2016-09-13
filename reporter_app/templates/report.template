@@ -50,42 +50,72 @@
                 <strong>{{ph_totals["total_open"]}}</strong> open tasks yet,
             </blockquote>
             <h2 style="text-align:center;"><span class="glyphicon glyphicon-stats" aria-hidden="true">&nbsp;</span>Statistics</h2>
-            <h3>Phabricator</h3>
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>Sub-project</th>
-                        <th>Opened tasks</th>
-                        <th>Closed tasks</th>
-                        <th>Comments</th>
-                        <th>Total tasks</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for pr in ph_projects %}
-                    <tr>
-                        <th scope="row">{{pr}}</th>
-                        <td>{{ph_projects[pr]["opened"]}}</td>
-                        <td>{{ph_projects[pr]["closed"]}}</td>
-                        <td>{{ph_projects[pr]["comments"]}}</td>
-                        <td>{{ph_projects[pr]["total_open"]}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th scope="row"></th>
-                        <th>{{ph_totals["opened"]}}</th>
-                        <th>{{ph_totals["closed"]}}</th>
-                        <th>{{ph_totals["comments"]}}</th>
-                        <th>{{ph_totals["total_open"]}}</th>
-                    </tr>
-                </tfoot>
-            </table>
+
+            <div class="col-md-12">
+                <h2>Phabricator</h2>
+                <p style="text-align:center;" class="lead">Projects</p>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Sub-project</th>
+                            <th>Opened tasks</th>
+                            <th>Closed tasks</th>
+                            <th>Comments</th>
+                            <th>Total tasks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pr in ph_projects %}
+                        <tr>
+                            <th scope="row">{{pr}}</th>
+                            <td>{{ph_projects[pr]["opened"]}}</td>
+                            <td>{{ph_projects[pr]["closed"]}}</td>
+                            <td>{{ph_projects[pr]["comments"]}}</td>
+                            <td>{{ph_projects[pr]["total_open"]}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th scope="row"></th>
+                            <th>{{ph_totals["opened"]}}</th>
+                            <th>{{ph_totals["closed"]}}</th>
+                            <th>{{ph_totals["comments"]}}</th>
+                            <th>{{ph_totals["total_open"]}}</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="col-md-12">
+                <p style="text-align:center;" class="lead">Contributors</p>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Opened tasks</th>
+                            <th>Closed tasks</th>
+                            <th>Resolved tasks</th>
+                            <th>Comments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pr in ph_devs %}
+                        <tr>
+                            <th scope="row">{{pr}}</th>
+                            <td>{{ph_devs[pr]["opened"]}}</td>
+                            <td>{{ph_devs[pr]["closed"]}}</td>
+                            <td>{{ph_devs[pr]["resolved"]}}</td>
+                            <td>{{ph_devs[pr]["comments"]}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
             <div>
-                <p><h3>Git</h3></p>
+
 
                 <div class="col-md-12">
+                    <p><h2>Git</h2></p>
                     <p style="text-align:center;" class="lead">Most active projects</p>
 
                     <table class="table table-bordered table-striped">

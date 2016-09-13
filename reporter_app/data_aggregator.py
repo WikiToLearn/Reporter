@@ -4,7 +4,7 @@ from reporter_app.providers import mediawiki_provider as mp
 import json
 
 
-datas = json.load(open("data_json","r"))
+datas = json.load(open("data_store.json","r"))
 
 
 def fetch_data(id, start_date, end_date, repos, phab_groups, mediawiki_langs ):
@@ -22,7 +22,7 @@ def fetch_data(id, start_date, end_date, repos, phab_groups, mediawiki_langs ):
         for ph_gr in phab_groups:
             ph_data = pp.calculate_generic_stats(phab_groups[ph_gr], start_date, end_date)
             data["phabricator"][ph_gr] = ph_data
-    json.dump(datas,open("data_json","w"), indent=4)
+        json.dump(datas,open("data_store.json","w"), indent=4)
     return datas[id]
 
 
@@ -32,12 +32,28 @@ def calculate_totals_phabricator(id):
                 "opened" : 0,
                 "closed" : 0,
                 "comments" : 0,
-                "total_open" : 0}
+                "total_open" : 0,
+                "users_stats": {}
+            }
     for pr in phdata.values():
         result["opened"] += pr["opened"]
         result["closed"] += pr["closed"]
         result["comments"] += pr["comments"]
         result["total_open"] += pr["total_open"]
+        #calculating totals for users
+        usstats = result["users_stats"]
+        for user, usd in pr["users_stats"].items():
+            if user not in result["users_stats"]:
+                usstats[user] =  {
+                    "opened":0,
+                    "closed": 0,
+                    "resolved":0,
+                    "comments":0}
+            #adding
+            usstats[user]["opened"] += usd["opened"]
+            usstats[user]["closed"] += usd["closed"]
+            usstats[user]["resolved"] += usd["resolved"]
+            usstats[user]["comments"] += usd["comments"]
     return result
 
 def calculate_totals_git(id):
@@ -47,7 +63,7 @@ def calculate_totals_git(id):
         "total_additions":0,
         "total_deletions": 0,
         "users_stats" : {}
-    }
+        }
     for gp in phdata.values():
         result["total_commits"] += gp["n_commits"]
         result["total_additions"] += gp["additions"]

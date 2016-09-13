@@ -141,7 +141,7 @@ def calculate_generic_stats(proj_phids, start_date, end_date):
     result = {
         "total_open": len(all_tasks['open_tasks']),
         "total_close" : len(all_tasks['closed_tasks']),
-        "users_data" : {}
+        "users_stats" : {}
     }
     #filter by date
     filt_tasks = {
@@ -153,26 +153,73 @@ def calculate_generic_stats(proj_phids, start_date, end_date):
     open_stat = count_status_transition(filt_tasks['open'],
                                         None,["open"], start_date, end_date)
     result["opened"] = open_stat[0]
-    result["users_data"]["opened"] = open_stat[1]
+    for user in open_stat[1]:
+        if not user in result["users_stats"]:
+            result["users_stats"][user] = {
+                "opened": 0,
+                "closed": 0,
+                "comments":0,
+                "resolved":0,
+                "not_resolved":0
+            }
+        result["users_stats"][user]["opened"] += open_stat[1][user]
 
     closed_stat = count_status_transition(filt_tasks['close'],"open",
                                           closed_status, start_date, end_date)
     result["closed"] = closed_stat[0]
-    result["users_data"]["closed"] = closed_stat[1]
+    for user in closed_stat[1]:
+        if not user in result["users_stats"]:
+            result["users_stats"][user] = {
+                "opened": 0,
+                "closed": 0,
+                "comments":0,
+                "resolved":0,
+                "not_resolved":0
+            }
+        result["users_stats"][user]["closed"] += closed_stat[1][user]
 
     resolved_stat = count_status_transition(filt_tasks['close'],
                                             "open", ["resolved"], start_date, end_date)
     result["resolved"] = resolved_stat[0]
-    result["users_data"]["resolved"] =  resolved_stat[1]
+    for user in resolved_stat[1]:
+        if not user in result["users_stats"]:
+            result["users_stats"][user] = {
+                "opened": 0,
+                "closed": 0,
+                "comments":0,
+                "resolved":0,
+                "not_resolved":0
+            }
+        result["users_stats"][user]["resolved"] += resolved_stat[1][user]
 
     not_resolved_stat = count_status_transition(filt_tasks['close'],
                                              "open", notsolved_status, start_date, end_date)
     result["not_resolved"] = not_resolved_stat[0]
-    result["users_data"]["not_resolved"] = not_resolved_stat[1]
+    for user in not_resolved_stat[1]:
+        if not user in result["users_stats"]:
+            result["users_stats"][user] = {
+                "opened": 0,
+                "closed": 0,
+                "comments":0,
+                "resolved":0,
+                "not_resolved":0
+            }
+        result["users_stats"][user]["not_resolved"] += not_resolved_stat[1][user]
+
 
     comments_stat = count_task_commented(filt_tasks["open"], start_date, end_date) + \
                          count_task_commented(filt_tasks["close"], start_date, end_date)
     result["comments"] =  comments_stat[0]
-    result["users_data"]["comments"] =  comments_stat[1]
+    for user in comments_stat[1]:
+        if not user in result["users_stats"]:
+            result["users_stats"][user] = {
+                "opened": 0,
+                "closed": 0,
+                "comments":0,
+                "resolved":0,
+                "not_resolved":0
+            }
+        result["users_stats"][user]["comments"] += comments_stat[1][user]
+
 
     return result
