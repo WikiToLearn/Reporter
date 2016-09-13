@@ -17,10 +17,9 @@ def get_contributes_per_user(repo, start_date, end_date):
             print("Error  {}".format(r.status_code))
             return
     data = r.json()
-    result = []
+    result = {}
     for item in data:
         aut  = {
-            "username": item['author']['login'],
             "avatar": item['author']['avatar_url'],
             "total_contributions": item['total'],
             "additions": 0,
@@ -34,7 +33,7 @@ def get_contributes_per_user(repo, start_date, end_date):
                 aut['deletions']+= week['d']
                 aut['commits']+= week['c']
         if aut['commits']>0:
-            result.append(aut)
+            result[item['author']['login']] = aut
     return result
 
 
@@ -52,15 +51,14 @@ def get_total_contributions(repo, start_date, end_date):
             return
     data = r.json()
     result = {
-        "repo": repo,
-        "n_commit": 0,
-        "total_additions" : 0,
-        "total_deletions" : 0
+        "n_commits": 0,
+        "additions" : 0,
+        "deletions" : 0
     }
     for item in data:
         w = datetime.date.fromtimestamp(item['week'])
         if w>= start_date and w<=end_date:
-            result['n_commit']+= item['total']
+            result['n_commits']+= item['total']
 
     #additions and deletions
     while True:
@@ -78,7 +76,13 @@ def get_total_contributions(repo, start_date, end_date):
     for item in data2:
         w = datetime.date.fromtimestamp(item[0])
         if w>= start_date and w<=end_date:
-            result['total_additions']+= item[1]
-            result['total_deletions']+= item[2]
+            result['additions']+= item[1]
+            result['deletions']+= item[2]
+    return result
 
+
+def get_complete_stats(repo, start_date, end_date):
+    result =  {}
+    result.update(get_total_contributions(repo, start_date, end_date))
+    result["users_stats"] = get_contributes_per_user(repo, start_date, end_date)
     return result

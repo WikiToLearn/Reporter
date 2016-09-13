@@ -12,9 +12,14 @@ def manager():
 def report(id):
     #getting data for the dates
     data = dagg.datas[id]
+    totals_git = dagg.calculate_totals_git(id)
     return render_template('report.template',
                            ph_projects = data["phabricator"],
-                           total_ph = dagg.calculate_totals_phabricator(id))
+                           ph_totals = dagg.calculate_totals_phabricator(id),
+                           git_projs = data["git"],
+                           git_totals = totals_git,
+                           git_devs = totals_git["users_stats"]
+                           )
 
 
 

@@ -11,16 +11,11 @@ def fetch_data(id, start_date, end_date, repos, phab_groups, mediawiki_langs ):
     if id not in datas:
         data = {}
         datas[id] = data
-        data["git"] = []
+        data["git"] = {}
         #getting data from git
         print("Fetching git data...")
         for repo in repos:
-            data["git"].append(
-                {
-                    "repo_name": repo,
-                    "stats_per_user" : gp.get_contributes_per_user(repo, start_date, end_date),
-                    "stats_total": gp.get_total_contributions(repo, start_date, end_date)
-                 })
+            data["git"][repo] = gp.get_complete_stats(repo, start_date, end_date)
         #getting data from phab
         data["phabricator"] = {}
         print("Fetching phabricator data...")
@@ -43,4 +38,34 @@ def calculate_totals_phabricator(id):
         result["closed"] += pr["closed"]
         result["comments"] += pr["comments"]
         result["total_open"] += pr["total_open"]
+    return result
+
+def calculate_totals_git(id):
+    phdata = datas[id]["git"]
+    result = {
+        "total_commits": 0,
+        "total_additions":0,
+        "total_deletions": 0,
+        "users_stats" : {}
+    }
+    for gp in phdata.values():
+        result["total_commits"] += gp["n_commits"]
+        result["total_additions"] += gp["additions"]
+        result["total_deletions"] += gp["deletions"]
+        #calculating totals for users
+        usstats = result["users_stats"]
+        for user, usd in gp["users_stats"].items():
+            if user not in result["users_stats"]:
+                usstats[user] =  {
+                    "avatar" : usd["avatar"],
+                    "total_contributions":0,
+                    "total_commits": 0,
+                    "total_additions":0,
+                    "total_deletions":0}
+            #adding
+            usstats[user]["total_contributions"] += usd["total_contributions"]
+            usstats[user]["total_commits"] += usd["commits"]
+            usstats[user]["total_additions"] += usd["additions"]
+            usstats[user]["total_deletions"] += usd["deletions"]
+
     return result

@@ -41,9 +41,13 @@
                 <blockquote>{{message}}</blockquote>
                 <h3>In a nutshell:</h3>
                 <blockquote
-                style="text-align:center;">Code: <strong>573</strong> changes, <strong>1321</strong> lines inserted, <strong>4332</strong> lines removed.<br />
+                style="text-align:center;">Code: <strong>{{git_totals["total_commits"]}}</strong> commits,
+                <strong>{{git_totals["total_additions"]}}</strong> lines inserted,
+                <strong>{{git_totals["total_deletions"]}}</strong> lines removed.<br />
                 Content: <strong>12</strong> edits on <strong>53</strong> pages.<br />
-                Tasks: <strong>13</strong> tasks opened <strong>23</strong> closed.<br />
+                Tasks: <strong>{{ph_totals["opened"]}}</strong> tasks opened,
+                <strong>{{ph_totals["closed"]}}</strong> closed.<br /> and
+                <strong>{{ph_totals["total_open"]}}</strong> open tasks yet,
             </blockquote>
             <h2 style="text-align:center;"><span class="glyphicon glyphicon-stats" aria-hidden="true">&nbsp;</span>Statistics</h2>
             <h3>Phabricator</h3>
@@ -71,23 +75,58 @@
                 <tfoot>
                     <tr>
                         <th scope="row"></th>
-                        <th>{{total_ph["opened"]}}</th>
-                        <th>{{total_ph["closed"]}}</th>
-                        <th>{{total_ph["comments"]}}</th>
-                        <th>{{total_ph["total_open"]}}</th>
+                        <th>{{ph_totals["opened"]}}</th>
+                        <th>{{ph_totals["closed"]}}</th>
+                        <th>{{ph_totals["comments"]}}</th>
+                        <th>{{ph_totals["total_open"]}}</th>
                     </tr>
                 </tfoot>
             </table>
             <div>
                 <p><h3>Git</h3></p>
 
-                <div class="col-md-6">
+                <div class="col-md-12">
+                    <p style="text-align:center;" class="lead">Most active projects</p>
+
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Repo</th>
+                                <th>Commits</th>
+                                <th>Lines added</th>
+                                <th>Lines removed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for gp in git_projs %}
+                            <tr>
+                                <td scope="row">{{gp}}</td>
+                                <td>{{git_projs[gp]["n_commits"]}}</td>
+                                <td>{{git_projs[gp]["additions"]}}</td>
+                                <td>{{git_projs[gp]["deletions"]}}</td>
+                            </tr>
+                            {% endfor %}
+                            <tfoot>
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td>{{git_totals["total_commits"]}}</td>
+                                    <td>{{git_totals["total_additions"]}}</td>
+                                    <td>{{git_totals["total_deletions"]}}</td>
+                                </tr>
+                            </tfoot>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-md-12">
                     <p style="text-align:center;" class="lead">Top committers</p>
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Commits</th>
+                                <th>Avatar</th>
+                                <th>Total contributions</th>
+                                <th>Commits (in this period)</th>
                                 <th>Lines removed</th>
                                 <th>Lines added</th>
                             </tr>
@@ -95,39 +134,18 @@
                         <tbody>
                             {% for dev in git_devs %}
                             <tr>
-                                <th scope="row">{{dev[name]}}</th>
-                                <td>{{dev[commits]}}</td>
-                                <td>{{dev[addictions]}}</td>
-                                <td>{{dev[deletions]}}</td>
+                                <th scope="row">{{dev}}</th>
+                                <td> <img src={{git_devs[dev]["avatar"]}} style="width:40px;height:40px;"> </td>
+                                <td>{{git_devs[dev]["total_contributions"]}}</td>
+                                <td>{{git_devs[dev]["total_commits"]}}</td>
+                                <td>{{git_devs[dev]["total_additions"]}}</td>
+                                <td>{{git_devs[dev]["total_deletions"]}}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
-                <div class="col-md-6">
-                    <p style="text-align:center;" class="lead">Most active projects</p>
 
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Commits</th>
-                                <th>Lines added</th>
-                                <th>Lines removed</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for pr in git_projects %}
-                            <tr>
-                                <td scope="row">{{pr[name]}}</td>
-                                <td>{{pr[commits]}}</td>
-                                <td>{{pr[addictions]}}</td>
-                                <td>{{pr[delections]}}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
             </div>
 
             <div class="clearfix"></div>
