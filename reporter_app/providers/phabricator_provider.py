@@ -39,7 +39,7 @@ def make_phab_query(entrypoint, data):
         return response.json()['result']
 
 def get_all_tasks(project_phids):
-    print("Getting all tasks...")
+    print("Getting all tasks {}...".format(project_phids))
     result = {"open_tasks":{}, "closed_tasks":{}}
     for project_phid in project_phids:
         data = {}

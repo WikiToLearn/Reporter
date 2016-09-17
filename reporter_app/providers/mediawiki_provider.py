@@ -12,7 +12,7 @@ def get_recentchanges_data(lang, start_date, end_date):
               "rcprop":"user|sizes",
               "rctype":"edit",
               "rcshow": "!anon",
-              "rclimit": 20}
+              "rclimit": 100}
     rclist_edit = []
     while True:
         r = requests.get(pconfig.mediawiki_api_url.format(lang),

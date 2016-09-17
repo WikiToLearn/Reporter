@@ -15,17 +15,14 @@ def report(id):
         return abort(404)
     data = dagg.datas[id]
     #total statistics
-    totals_ph = dagg.calculate_totals_phabricator(id)
-    totals_git = dagg.calculate_totals_git(id)
     return render_template('report.template',
                            ph_projects = data["phabricator"],
-                           ph_totals = totals_ph,
-                           ph_devs = totals_ph['users_stats'],
+                           ph_totals = data["totals_phab"],
+                           ph_devs = data["totals_phab"]['users_stats'],
                            git_projs = data["git"],
-                           git_totals = totals_git,
-                           git_devs = totals_git["users_stats"]
+                           git_totals = data["totals_git"],
+                           git_devs = data["totals_git"]["users_stats"]
                            )
-
 
 
 @app.route('/report/generate', methods=['POST'])
@@ -39,8 +36,9 @@ def generate_report():
         ph_projs[p] = []
         for id in query["ph_projs"][p]:
             ph_projs[p].append(dagg.pp.lookup_project_phabid_byid(id))
+    mediawiki_langs = query["mediawiki_langs"]
     id = generate_id(start_date, end_date)
-    dagg.fetch_data(id, start_date, end_date,repos, ph_projs, [])
+    dagg.fetch_data(id, start_date, end_date,repos, ph_projs, mediawiki_langs )
     return jsonify(dagg.datas[id])
 
 def generate_id(start_date, end_date):

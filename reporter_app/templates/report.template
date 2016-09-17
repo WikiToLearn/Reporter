@@ -6,14 +6,27 @@
     <title>WikiToLearn report</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- jQuery Version 2.2.4 -->
+    <script src="{{ url_for('static', filename='js/jquery-1.12.4.min.js') }}"></script>
 
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <!-- Custom scripts -->
+    <script src="{{ url_for('static', filename='js/index.js')}}"></script>
+    <!-- Bootstrap Core CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/jasny-bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/custom.css') }}" rel="stylesheet">
+    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+
+
+
     <style>
     body {
         background-color: #fefefe;
@@ -54,7 +67,7 @@
             <div class="col-md-12">
                 <h2>Phabricator</h2>
                 <p style="text-align:center;" class="lead">Projects</p>
-                <table class="table table-bordered table-striped">
+                <table class="table table-bordered table-striped" id="phab_general_tabel">
                     <thead>
                         <tr>
                             <th>Sub-project</th>
@@ -88,7 +101,7 @@
             </div>
             <div class="col-md-12">
                 <p style="text-align:center;" class="lead">Contributors</p>
-                <table class="table table-bordered table-striped">
+                <table class="table table-bordered table-striped" id="phab_users_table">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -118,7 +131,7 @@
                     <p><h2>Git</h2></p>
                     <p style="text-align:center;" class="lead">Most active projects</p>
 
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-striped" id="git_projs_table">
                         <thead>
                             <tr>
                                 <th>Repo</th>
@@ -150,7 +163,7 @@
 
                 <div class="col-md-12">
                     <p style="text-align:center;" class="lead">Top committers</p>
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-striped" id="git_users_table">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -245,6 +258,7 @@
         </div>
     </div>
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+
 </body>
 
 </html>
