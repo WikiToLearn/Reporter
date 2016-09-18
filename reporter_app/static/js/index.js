@@ -9,6 +9,9 @@ $(document).ready(function() {
         "order" : [[1, "desc"]]
     });
     $('#git_users_table').dataTable({
-        "order" : [[2, "desc"]]
+        "order" : [[3, "desc"]]
+    });
+    $('#wiki_users_table').dataTable({
+        "order" : [[5, "desc"]]
     });
 });

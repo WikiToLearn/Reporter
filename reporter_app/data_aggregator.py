@@ -20,7 +20,6 @@ def fetch_data(id, start_date, end_date, repos, phab_groups, mediawiki_langs ):
     #calculating totals for git
     print("Calculating git totals...")
     datas[id]["totals_git"] = calculate_totals_git(id)
-    json.dumps(data["git"],open("data_git.json","w"), indent=4)
     #getting data from phab
     data["phabricator"] = {}
     print("Fetching phabricator data...")
@@ -30,14 +29,15 @@ def fetch_data(id, start_date, end_date, repos, phab_groups, mediawiki_langs ):
     #calculate totals for phabricator
     print("Calculating phabricator totals...")
     datas[id]["totals_phab"] = calculate_totals_phabricator(id)
-    json.dumps(data["phabricator"],open("data_phab.json","w"), indent=4)
     #mediawiki data
     data["mediawiki"] = {}
     print("Fetching mediawiki data...")
     for mlang in mediawiki_langs:
         mdata =  mp.get_mediawiki_stats(mlang, start_date, end_date)
         data["mediawiki"][mlang] = mdata
-    json.dumps(data["mediawiki"],open("data_mediawiki.json","w"), indent=4)
+    #calculating totals for mediawiki
+    print("Calculating mediawiki totals...")
+    datas[id]["totals_mediawiki"] = calculate_totals_mediawiki(id)
     #saving all
     json.dump(datas,open("data_store.json","w"), indent=4)
     return datas[id]
@@ -92,6 +92,7 @@ def calculate_totals_git(id):
             if user not in result["users_stats"]:
                 usstats[user] =  {
                     "avatar" : usd["avatar"],
+                    "profile_url" :usd["profile_url"],
                     "total_contributions":0,
                     "total_commits": 0,
                     "total_additions":0,
@@ -101,5 +102,36 @@ def calculate_totals_git(id):
             usstats[user]["total_commits"] += usd["commits"]
             usstats[user]["total_additions"] += usd["additions"]
             usstats[user]["total_deletions"] += usd["deletions"]
+    return result
 
+def calculate_totals_mediawiki(id):
+    mdata = datas[id]["mediawiki"]
+    result =  {
+        "total_additions": 0,
+        "total_deletions": 0,
+        "total_edits": 0,
+        "total_new_pages":0,
+        "users_stats" : {}
+    }
+    for mp in mdata.values():
+        result["total_additions"] += mp["total_additions"]
+        result["total_deletions"] += mp["total_deletions"]
+        result["total_new_pages"] += mp["total_new_pages"]
+        result["total_edits"] += mp["total_edits"]
+        #calculating totals for users
+        usstats = result["users_stats"]
+        for user, usd in mp["users_stats"].items():
+            if user not in result["users_stats"]:
+                usstats[user] =  {
+                    "edits": 0,
+                    "new_pages": 0,
+                    "additions":0,
+                    "deletions":0,
+                    "score": 0}
+            #adding
+            usstats[user]["edits"] += usd["edits"]
+            usstats[user]["new_pages"] += usd["new_pages"]
+            usstats[user]["additions"] += usd["additions"]
+            usstats[user]["deletions"] += usd["deletions"]
+            usstats[user]["score"] = usd["new_pages"] *10 + usd["edits"]
     return result

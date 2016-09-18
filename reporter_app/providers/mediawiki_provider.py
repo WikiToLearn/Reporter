@@ -25,6 +25,8 @@ def get_recentchanges_data(lang, start_date, end_date):
             break
     #now new pages
     params["rctype"] = "new"
+    params.pop("rccontinue")
+    print("getting new pages")
     rclist_new = []
     while True:
         r = requests.get(pconfig.mediawiki_api_url.format(lang),
@@ -32,7 +34,7 @@ def get_recentchanges_data(lang, start_date, end_date):
         rclist_new += r["query"]["recentchanges"]
         if "continue" in r:
             params["rccontinue"] = r["continue"]["rccontinue"]
-            print('#')
+            print('%')
         else:
             break
     return {
@@ -45,32 +47,36 @@ def get_mediawiki_stats(lang, start_date, end_date):
     result = {
         "total_new_pages": len(data["new"]),
         "total_edits": len(data["edit"]),
-        "total_addictions": 0,
+        "total_additions": 0,
         "total_deletions": 0,
-        "users_data": {}
+        "users_stats": {}
     }
     for nrc in data['new']:
         user = nrc["user"]
-        result["total_addictions"] += nrc["newlen"]
-        if user in result["users_data"] and "addictions" in result["users_data"][user] :
-            result["users_data"][user]["addictions"] += nrc["newlen"]
-            result["users_data"][user]["new_pages"] +=1
+        result["total_additions"] += nrc["newlen"]
+        if user in result["users_stats"] and "additions" in result["users_stats"][user]:
+            result["users_stats"][user]["additions"] += nrc["newlen"]
+            result["users_stats"][user]["new_pages"] +=1
         else:
-            result["users_data"][user] = { "addictions": nrc["newlen"],
-                                          "deletions": 0, "new_pages":0}
+            result["users_stats"][user] = { "additions": nrc["newlen"],
+                                          "deletions": 0, "new_pages":0, "edits":0}
     for erc in data["edit"]:
         ch = erc["newlen"] - erc["oldlen"]
         user = erc["user"]
         if ch >= 0:
-            result["total_addictions"] += ch
-            if user in result["users_data"] and "addictions" in result["users_data"][user]:
-                result["users_data"][user]["addictions"] += ch
+            result["total_additions"] += ch
+            if user in result["users_stats"] and "additions" in result["users_stats"][user]:
+                result["users_stats"][user]["additions"] += ch
+                result["users_stats"][user]["edits"] += 1
             else:
-                result["users_data"][user] = { "addictions": ch, "deletions": 0}
+                result["users_stats"][user] = { "additions": ch, "deletions": 0,
+                                              "new_pages":0, "edits":1}
         else:
             result["total_deletions"] += ch
-            if user in result["users_data"] and "deletions" in result["users_data"][user]:
-                result["users_data"][user]["deletions"] += ch
+            if user in result["users_stats"] and "deletions" in result["users_stats"][user]:
+                result["users_stats"][user]["deletions"] += ch
+                result["users_stats"][user]["edits"] += 1
             else:
-                result["users_data"][user] = {"addictions":0, "deletions": ch}
+                result["users_stats"][user] = {"additions":0, "deletions": ch,
+                                              "new_pages": 0, "edits":1}
     return result

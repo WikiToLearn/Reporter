@@ -6,7 +6,7 @@
     <title>WikiToLearn report</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    
+
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- jQuery Version 2.2.4 -->
@@ -74,7 +74,7 @@
                             <th>Opened tasks</th>
                             <th>Closed tasks</th>
                             <th>Comments</th>
-                            <th>Total tasks</th>
+                            <th>Total open tasks</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -170,15 +170,16 @@
                                 <th>Avatar</th>
                                 <th>Total contributions</th>
                                 <th>Commits (in this period)</th>
-                                <th>Lines removed</th>
                                 <th>Lines added</th>
+                                <th>Lines removed</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for dev in git_devs %}
                             <tr>
                                 <th scope="row">{{dev}}</th>
-                                <td> <img src={{git_devs[dev]["avatar"]}} style="width:40px;height:40px;"> </td>
+                                <td> <a href={{git_devs[dev]["profile_url"]}}>
+                                    <img src={{git_devs[dev]["avatar"]}} style="width:40px;height:40px;"> </a></td>
                                 <td>{{git_devs[dev]["total_contributions"]}}</td>
                                 <td>{{git_devs[dev]["total_commits"]}}</td>
                                 <td>{{git_devs[dev]["total_additions"]}}</td>
@@ -196,11 +197,13 @@
 
             <div class="col-md-12">
                 <big>Top editors</big>
-                <table class="table table-bordered table-striped">
+                <table class="table table-bordered table-striped" id="wiki_users_table">
                     <thead>
                         <tr>
                             <th></th>
                             <th>Edits</th>
+                            <th>Additions</th>
+                            <th>Deletions</th>
                             <th>Pages</th>
                             <th>Score</th>
                         </tr>
@@ -208,9 +211,12 @@
                     <tbody>
                         {% for au in wiki_authors %}
                         <tr>
-                            <td scope="row">{{au.name}}</td>
-                            <td>{{au.edits}}</td>
-                            <td>{{au.pages}}</td>
+                            <td scope="row">{{au}}</td>
+                            <td>{{wiki_authors[au]["edits"]}}</td>
+                            <td>{{wiki_authors[au]["additions"]}}</td>
+                            <td>{{wiki_authors[au]["deletions"]}}</td>
+                            <td>{{wiki_authors[au]["new_pages"]}}</td>
+                            <td>{{wiki_authors[au]["score"]}}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
