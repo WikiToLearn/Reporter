@@ -8,31 +8,45 @@ datas = json.load(open("data_store.json","r"))
 
 
 def fetch_data(id, start_date, end_date, repos, phab_groups, mediawiki_langs ):
-    if id  in datas:
-        datas[id].clear()
-    data = {}
-    datas[id] = data
-    data["git"] = {}
+    if id  not in datas:
+        data = {}
+        datas[id] = data
+        data["git"] = {}
+        data["phabricator"] = {}
+        data["mediawiki"] = {}
+    else:
+        data = datas[id]
     #getting data from git
     print("Fetching git data...")
     for repo in repos:
+        if repo in data["git"]:
+            print("Repo {} already fetched...".format(repo))
+            continue
         data["git"][repo] = gp.get_complete_stats(repo, start_date, end_date)
     #calculating totals for git
     print("Calculating git totals...")
     datas[id]["totals_git"] = calculate_totals_git(id)
     #getting data from phab
-    data["phabricator"] = {}
+
     print("Fetching phabricator data...")
     for ph_gr in phab_groups:
+        if ph_gr in data["phabricator"]:
+            if data["phabricator"][ph_gr]["phids"] == phab_groups[ph_gr]:
+                print("Phabricator group {} already fetched...".format(ph_gr))
+                continue
         ph_data = pp.calculate_generic_stats(phab_groups[ph_gr], start_date, end_date)
         data["phabricator"][ph_gr] = ph_data
     #calculate totals for phabricator
     print("Calculating phabricator totals...")
     datas[id]["totals_phab"] = calculate_totals_phabricator(id)
     #mediawiki data
-    data["mediawiki"] = {}
+
     print("Fetching mediawiki data...")
     for mlang in mediawiki_langs:
+        if mlang in data["mediawiki"]:
+            print("Lang {} already fetched...".format(mlang))
+            continue
+        print("Lang: {}".format(mlang))
         mdata =  mp.get_mediawiki_stats(mlang, start_date, end_date)
         data["mediawiki"][mlang] = mdata
     #calculating totals for mediawiki
@@ -134,4 +148,5 @@ def calculate_totals_mediawiki(id):
             usstats[user]["additions"] += usd["additions"]
             usstats[user]["deletions"] += usd["deletions"]
             usstats[user]["score"] = usd["new_pages"] *10 + usd["edits"]
+    result["total_users"] = len(result["users_stats"])
     return result
