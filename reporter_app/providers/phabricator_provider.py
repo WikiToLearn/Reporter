@@ -73,7 +73,8 @@ def get_user_metadata(phid):
     user_data = {
         "username" : result['userName'],
         "realname" : result['realName'],
-        "image_url": result['image']
+        "image_url": result['image'],
+        "profile_url": result['uri']
     }
     users_cache[phid] = user_data
 

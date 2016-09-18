@@ -93,8 +93,8 @@
                     <tfoot>
                         <tr>
                             <th scope="row"></th>
-                            <th>{{ph_totals["opened"]}}</th>
                             <th>{{ph_totals["closed"]}}</th>
+                            <th>{{ph_totals["opened"]}}</th>
                             <th>{{ph_totals["comments"]}}</th>
                             <th>{{ph_totals["total_open"]}}</th>
                         </tr>
@@ -107,6 +107,7 @@
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Avatar</th>
                             <th>Closed tasks</th>
                             <th>Opened tasks</th>
                             <th>Resolved tasks</th>
@@ -116,7 +117,9 @@
                     <tbody>
                         {% for pr in ph_devs %}
                         <tr>
-                            <th scope="row">{{pr}}</th>
+                            <th scope="row"><a href={{ph_devs[dev]["profile_url"]}}>{{pr}}</a></th>
+                            <td> <a href={{ph_devs[dev]["profile_url"]}}>
+                                <img src={{ph_devs[dev]["image_url"]}} style="width:40px;height:40px;"> </a></td>
                             <td>{{ph_devs[pr]["closed"]}}</td>
                             <td>{{ph_devs[pr]["opened"]}}</td>
                             <td>{{ph_devs[pr]["resolved"]}}</td>
