@@ -9,7 +9,7 @@ $(document).ready(function() {
         "order" : [[1, "desc"]]
     });
     $('#git_users_table').dataTable({
-        "order" : [[3, "desc"]]
+        "order" : [[2, "desc"]]
     });
     $('#wiki_plat_table').dataTable({
         "order" : [[1, "desc"]]

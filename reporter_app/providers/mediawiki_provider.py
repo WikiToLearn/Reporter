@@ -25,7 +25,8 @@ def get_recentchanges_data(lang, start_date, end_date):
             break
     #now new pages
     params["rctype"] = "new"
-    params.pop("rccontinue")
+    if "rccontinue" in params:
+        params.pop("rccontinue")
     print("getting new pages")
     rclist_new = []
     while True:

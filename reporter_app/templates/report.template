@@ -202,7 +202,7 @@
                 <table class="table table-bordered table-striped" id="wiki_plat_table">
                     <thead>
                         <tr>
-                            <th></th>
+                            <th>Language</th>
                             <th>Edits</th>
                             <th>Additions</th>
                             <th>Deletions</th>
@@ -237,7 +237,7 @@
                 <table class="table table-bordered table-striped" id="wiki_users_table">
                     <thead>
                         <tr>
-                            <th></th>
+                            <th>Author</th>
                             <th>Edits</th>
                             <th>Additions</th>
                             <th>Deletions</th>
