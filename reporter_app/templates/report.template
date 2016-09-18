@@ -73,8 +73,8 @@
                     <thead>
                         <tr>
                             <th>Sub-project</th>
-                            <th>Opened tasks</th>
                             <th>Closed tasks</th>
+                            <th>Opened tasks</th>
                             <th>Comments</th>
                             <th>Total open tasks</th>
                         </tr>
@@ -83,8 +83,8 @@
                         {% for pr in ph_projects %}
                         <tr>
                             <th scope="row">{{pr}}</th>
-                            <td>{{ph_projects[pr]["opened"]}}</td>
                             <td>{{ph_projects[pr]["closed"]}}</td>
+                            <td>{{ph_projects[pr]["opened"]}}</td>
                             <td>{{ph_projects[pr]["comments"]}}</td>
                             <td>{{ph_projects[pr]["total_open"]}}</td>
                         </tr>
@@ -102,13 +102,13 @@
                 </table>
             </div>
             <div class="col-md-12">
-                <p style="text-align:center;" class="lead">Contributors</p>
+                <p style="text-align:center;" class="lead">Contributors on Phabricator</p>
                 <table class="table table-bordered table-striped" id="phab_users_table">
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Opened tasks</th>
                             <th>Closed tasks</th>
+                            <th>Opened tasks</th>
                             <th>Resolved tasks</th>
                             <th>Comments</th>
                         </tr>
@@ -117,8 +117,8 @@
                         {% for pr in ph_devs %}
                         <tr>
                             <th scope="row">{{pr}}</th>
-                            <td>{{ph_devs[pr]["opened"]}}</td>
                             <td>{{ph_devs[pr]["closed"]}}</td>
+                            <td>{{ph_devs[pr]["opened"]}}</td>
                             <td>{{ph_devs[pr]["resolved"]}}</td>
                             <td>{{ph_devs[pr]["comments"]}}</td>
                         </tr>
@@ -131,7 +131,7 @@
 
                 <div class="col-md-12">
                     <p><h2>Git</h2></p>
-                    <p style="text-align:center;" class="lead">Most active projects</p>
+                    <p style="text-align:center;" class="lead">Git repositories</p>
 
                     <table class="table table-bordered table-striped" id="git_projs_table">
                         <thead>
@@ -170,22 +170,22 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Avatar</th>
-                                <th>Total contributions</th>
                                 <th>Commits (in this period)</th>
                                 <th>Lines added</th>
                                 <th>Lines removed</th>
+                                <th>Total contributions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for dev in git_devs %}
                             <tr>
-                                <th scope="row">{{dev}}</th>
+                                <th scope="row"><a href={{git_devs[dev]["profile_url"]}}>{{dev}}</a></th>
                                 <td> <a href={{git_devs[dev]["profile_url"]}}>
                                     <img src={{git_devs[dev]["avatar"]}} style="width:40px;height:40px;"> </a></td>
-                                <td>{{git_devs[dev]["total_contributions"]}}</td>
                                 <td>{{git_devs[dev]["total_commits"]}}</td>
                                 <td>{{git_devs[dev]["total_additions"]}}</td>
                                 <td>{{git_devs[dev]["total_deletions"]}}</td>
+                                <td>{{git_devs[dev]["total_contributions"]}}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
