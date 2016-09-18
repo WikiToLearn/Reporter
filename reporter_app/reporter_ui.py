@@ -22,6 +22,8 @@ def report(id):
                            git_projs = data["git"],
                            git_totals = data["totals_git"],
                            git_devs = data["totals_git"]["users_stats"],
+                           wiki_plats = data["mediawiki"],
+                           wiki_totals = data["totals_mediawiki"],
                            wiki_authors = data["totals_mediawiki"]["users_stats"]
                            )
 

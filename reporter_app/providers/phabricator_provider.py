@@ -139,6 +139,7 @@ def calculate_generic_stats(proj_phids, start_date, end_date):
     result = {}
     all_tasks = get_all_tasks(proj_phids)
     result = {
+        "phids": proj_phids,
         "total_open": len(all_tasks['open_tasks']),
         "total_close" : len(all_tasks['closed_tasks']),
         "users_stats" : {}

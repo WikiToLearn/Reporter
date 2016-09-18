@@ -11,6 +11,9 @@ $(document).ready(function() {
     $('#git_users_table').dataTable({
         "order" : [[3, "desc"]]
     });
+    $('#wiki_plat_table').dataTable({
+        "order" : [[1, "desc"]]
+    });
     $('#wiki_users_table').dataTable({
         "order" : [[5, "desc"]]
     });

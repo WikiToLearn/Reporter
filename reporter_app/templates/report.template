@@ -57,7 +57,9 @@
                 style="text-align:center;">Code: <strong>{{git_totals["total_commits"]}}</strong> commits,
                 <strong>{{git_totals["total_additions"]}}</strong> lines inserted,
                 <strong>{{git_totals["total_deletions"]}}</strong> lines removed.<br />
-                Content: <strong>12</strong> edits on <strong>53</strong> pages.<br />
+                Content: <strong>{{wiki_totals["total_edits"]}}</strong> edits and
+                <strong>{{wiki_totals["total_new_pages"]}}</strong> new pages by
+                <strong>{{wiki_totals["total_users"]}}</strong> users.<br />
                 Tasks: <strong>{{ph_totals["opened"]}}</strong> tasks opened,
                 <strong>{{ph_totals["closed"]}}</strong> closed.<br /> and
                 <strong>{{ph_totals["total_open"]}}</strong> open tasks yet,
@@ -196,7 +198,42 @@
             <p><h3>Content editing</h3></p>
 
             <div class="col-md-12">
-                <big>Top editors</big>
+                <p style="text-align:center;" class="lead">Language portals</p>
+                <table class="table table-bordered table-striped" id="wiki_plat_table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Edits</th>
+                            <th>Additions</th>
+                            <th>Deletions</th>
+                            <th>New pages</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for wi in wiki_plats %}
+                        <tr>
+                            <td scope="row">{{wi}}</td>
+                            <td>{{wiki_plats[wi]["total_edits"]}}</td>
+                            <td>{{wiki_plats[wi]["total_additions"]}}</td>
+                            <td>{{wiki_plats[wi]["total_deletions"]}}</td>
+                            <td>{{wiki_plats[wi]["total_new_pages"]}}</td>
+                        </tr>
+                        {% endfor %}
+                        <tfoot>
+                            <tr>
+                                <th scope="row"></th>
+                                <td>{{wiki_totals["total_edits"]}}</td>
+                                <td>{{wiki_totals["total_additions"]}}</td>
+                                <td>{{wiki_totals["total_deletions"]}}</td>
+                                <td>{{wiki_totals["total_new_pages"]}}</td>
+                            </tr>
+                        </tfoot>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-md-12">
+                <p style="text-align:center;" class="lead">Top editors</p>
                 <table class="table table-bordered table-striped" id="wiki_users_table">
                     <thead>
                         <tr>
@@ -204,7 +241,7 @@
                             <th>Edits</th>
                             <th>Additions</th>
                             <th>Deletions</th>
-                            <th>Pages</th>
+                            <th>New pages</th>
                             <th>Score</th>
                         </tr>
                     </thead>
