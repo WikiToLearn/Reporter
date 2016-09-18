@@ -21,6 +21,7 @@ def get_contributes_per_user(repo, start_date, end_date):
     for item in data:
         aut  = {
             "avatar": item['author']['avatar_url'],
+            "profile_url" : item['author']['html_url'],
             "total_contributions": item['total'],
             "additions": 0,
             "deletions": 0,
