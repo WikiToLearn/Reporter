@@ -1,0 +1,13 @@
+{#  _reporter_app/templates/index.template_ #}
+{% extends "layout.template" %}
+{% block title %}WikiToLearn Reports index{% endblock %}
+{% block container %}
+
+<div class="list-group col-md-12">
+    {% for link in links %}
+        <a href={{link}} class="list-group-item">{{link}}</a>
+    {% endfor %}
+</div>
+
+
+{% endblock %}

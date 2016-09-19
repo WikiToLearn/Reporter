@@ -7,7 +7,7 @@ import reporter_app.providers.provider_config as pconfig
 def get_contributes_per_user(repo, start_date, end_date):
     while True:
         r = requests.get("https://api.github.com/repos/"+repo+ "/stats/contributors",
-                         auth=(pconfig.github_user, pconfig.github_pass))
+                         auth=(pconfig.github_user, pconfig.github_token))
         print(repo + " - " + str(r.status_code))
         if r.status_code == 202:
             time.sleep(2)
@@ -41,7 +41,7 @@ def get_contributes_per_user(repo, start_date, end_date):
 def get_total_contributions(repo, start_date, end_date):
     while True:
         r = requests.get("https://api.github.com/repos/"+repo+ "/stats/commit_activity",
-                        auth=(pconfig.github_user, pconfig.github_pass))
+                        auth=(pconfig.github_user, pconfig.github_token))
         print(repo + " - " + str(r.status_code))
         if r.status_code == 202:
             time.sleep(2)
@@ -64,7 +64,7 @@ def get_total_contributions(repo, start_date, end_date):
     #additions and deletions
     while True:
         r2 = requests.get("https://api.github.com/repos/"+repo+ "/stats/code_frequency",
-                         auth=(pconfig.github_user, pconfig.github_pass))
+                         auth=(pconfig.github_user, pconfig.github_token))
         print(repo + "- " + str(r2.status_code))
         if r2.status_code == 202:
             time.sleep(2)

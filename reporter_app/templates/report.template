@@ -1,49 +1,7 @@
 {#  _reporter_app/templates/report.template_ #}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <title>WikiToLearn report</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- jQuery Version 2.2.4 -->
-    <script src="{{ url_for('static', filename='js/jquery-1.12.4.min.js') }}"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-
-    <!-- Custom scripts -->
-    <script src="{{ url_for('static', filename='js/index.js')}}"></script>
-    <!-- Bootstrap Core CSS -->
-    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/jasny-bootstrap.min.css') }}" rel="stylesheet">
-    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
-
-
-
-    <style>
-    body {
-        background-color: #fefefe;
-    }
-    </style>
-</head>
-
-<body>
-    <div class="container">
-        <div class="col-md-12">
-            <header class="header">
-                <div style="margin-top: 15px; margin-bottom:-10px;">
-                    <img src="http://i.imgur.com/UpuaNZD.png" class="center-block" />
-                    <!-- <h3 style="text-align:center;">WikiToLearn Reports</h3> -->
-                </div>
-            </header>
-            <hr/>
-        </div>
+{% extends "layout.template" %}
+{% block title %}WikiToLearn Reports{% endblock %}
+{% block container %}
 
         <div class="row text-justify">
             <div class="col-xs-12 col-md-9">
@@ -147,7 +105,7 @@
                         <tbody>
                             {% for gp in git_projs %}
                             <tr>
-                                <td scope="row">{{gp}}</td>
+                                <td scope="row"><a href="https://github.com/{{gp}}">{{gp}}</a></td>
                                 <td>{{git_projs[gp]["n_commits"]}}</td>
                                 <td>{{git_projs[gp]["additions"]}}</td>
                                 <td>{{git_projs[gp]["deletions"]}}</td>
@@ -278,7 +236,7 @@
             <h3><span class="glyphicon glyphicon-time" aria-hidden="true">&nbsp;</span>Previous report</h3>
             <p class="center-block" style="text-align:center;">  <a href="{{previous_report_path}}">{{previous_report_data}}</a></p>
             <div style="height:20px;margin-top: 10px;"></div>
-            <img src="http://i.imgur.com/PLvzmeV.png" class="img-responsive" />
+            <img src="//i.imgur.com/PLvzmeV.png" class="img-responsive" />
             <!-- <h2 class="text-center">Join WikiToLearn!</h2> -->
             <p class=lead>
                 If you are interested, see what you can do, chat with us, send us <a href="mailto:info@wikitolearn.org">an e-mail</a>, or simply <a href="https://github.com/WikiToLearn">check out our source code</a>!</p>
@@ -293,17 +251,4 @@
         </div>
 
 
-        <div class="col-md-12">
-            <hr/>
-            <footer class="footer">
-                <div class="container" style="margin-top: 10px; margin-bottom:20px;">
-                    <p class="text-muted">We're proud to be a <a href="http://www.kde.org">KDE</a> project. Made with love by the <a href="http://www.wikitolearn.org">WikiToLearn</a> community.</p>
-                </div>
-            </footer>
-        </div>
-    </div>
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
-
-</body>
-
-</html>
+{% endblock %}

@@ -8,7 +8,7 @@ import reporter_app.data_aggregator as dagg
 def manager():
     return render_template('create_report.template')
 
-@app.route('/report/<id>', methods=['GET'])
+@app.route('/<id>', methods=['GET'])
 def report(id):
     #getting data for the dates
     if id not in dagg.datas:
@@ -27,6 +27,11 @@ def report(id):
                            wiki_authors = data["totals_mediawiki"]["users_stats"]
                            )
 
+
+@app.route('/', methods=['GET'])
+def index():
+    return render_template('index.template',
+                           links = list(dagg.datas.keys()))
 
 @app.route('/report/generate', methods=['POST'])
 def generate_report():
