@@ -3,7 +3,7 @@ $(document).ready(function() {
         "order" : [[1, "desc"]]
     });
     $('#phab_users_table').dataTable({
-        "order" : [[1, "desc"]]
+        "order" : [[2, "desc"]]
     });
     $('#git_projs_table').dataTable({
         "order" : [[1, "desc"]]
