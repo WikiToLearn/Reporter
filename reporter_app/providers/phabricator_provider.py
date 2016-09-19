@@ -66,6 +66,7 @@ def filter_task_by_date(tasks, start_date, end_date):
 #cache for transactions of the tasks
 transactions_cache = {}
 users_cache = {}
+users_name_cache = {}
 
 def get_user_metadata(phid):
     data = {"phids[0]": phid}
@@ -73,10 +74,11 @@ def get_user_metadata(phid):
     user_data = {
         "username" : result['userName'],
         "realname" : result['realName'],
-        "image_url": result['image'],
+        "avatar": result['image'],
         "profile_url": result['uri']
     }
     users_cache[phid] = user_data
+    users_name_cache[user_data["username"]] = user_data
 
 
 def count_status_transition(tasks, oldstatus, newstatus_list, start_date, end_date):
@@ -162,7 +164,9 @@ def calculate_generic_stats(proj_phids, start_date, end_date):
                 "closed": 0,
                 "comments":0,
                 "resolved":0,
-                "not_resolved":0
+                "not_resolved":0,
+                "avatar" : users_name_cache[user]["avatar"],
+                "profile_url" : users_name_cache[user]["profile_url"]
             }
         result["users_stats"][user]["opened"] += open_stat[1][user]
 
@@ -176,7 +180,9 @@ def calculate_generic_stats(proj_phids, start_date, end_date):
                 "closed": 0,
                 "comments":0,
                 "resolved":0,
-                "not_resolved":0
+                "not_resolved":0,
+                "avatar" : users_name_cache[user]["avatar"],
+                "profile_url" : users_name_cache[user]["profile_url"]
             }
         result["users_stats"][user]["closed"] += closed_stat[1][user]
 
@@ -190,7 +196,9 @@ def calculate_generic_stats(proj_phids, start_date, end_date):
                 "closed": 0,
                 "comments":0,
                 "resolved":0,
-                "not_resolved":0
+                "not_resolved":0,
+                "avatar" : users_name_cache[user]["avatar"],
+                "profile_url" : users_name_cache[user]["profile_url"]
             }
         result["users_stats"][user]["resolved"] += resolved_stat[1][user]
 
@@ -204,7 +212,9 @@ def calculate_generic_stats(proj_phids, start_date, end_date):
                 "closed": 0,
                 "comments":0,
                 "resolved":0,
-                "not_resolved":0
+                "not_resolved":0,
+                "avatar" : users_name_cache[user]["avatar"],
+                "profile_url" : users_name_cache[user]["profile_url"]
             }
         result["users_stats"][user]["not_resolved"] += not_resolved_stat[1][user]
 
@@ -219,7 +229,9 @@ def calculate_generic_stats(proj_phids, start_date, end_date):
                 "closed": 0,
                 "comments":0,
                 "resolved":0,
-                "not_resolved":0
+                "not_resolved":0,
+                "avatar" : users_name_cache[user]["avatar"],
+                "profile_url" : users_name_cache[user]["profile_url"]
             }
         result["users_stats"][user]["comments"] += comments_stat[1][user]
 

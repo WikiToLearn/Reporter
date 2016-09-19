@@ -79,7 +79,9 @@ def calculate_totals_phabricator(id):
                     "opened":0,
                     "closed": 0,
                     "resolved":0,
-                    "comments":0}
+                    "comments":0,
+                    "avatar": usd["avatar"],
+                    "profile_url": usd["profile_url"]}
             #adding
             usstats[user]["opened"] += usd["opened"]
             usstats[user]["closed"] += usd["closed"]
