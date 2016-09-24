@@ -12,28 +12,31 @@
                 <h3>In a nutshell:</h3>
                 <blockquote
                 style="text-align:center;">Code: <strong>{{git_totals["total_commits"]}}</strong> commits,
-                <strong>{{git_totals["total_additions"]}}</strong> lines inserted,
-                <strong>{{git_totals["total_deletions"]}}</strong> lines removed.<br />
-                Content: <strong>{{wiki_totals["total_edits"]}}</strong> edits and
-                <strong>{{wiki_totals["total_new_pages"]}}</strong> new pages by
-                <strong>{{wiki_totals["total_users"]}}</strong> users.<br />
-                Tasks: <strong>{{ph_totals["opened"]}}</strong> tasks opened,
-                <strong>{{ph_totals["closed"]}}</strong> closed.<br /> and
-                <strong>{{ph_totals["total_open"]}}</strong> open tasks yet,
-            </blockquote>
+                    <strong>{{git_totals["total_additions"]}}</strong> lines inserted,
+                    <strong>{{git_totals["total_deletions"]}}</strong> lines removed.<br />
+                    Content: <strong>{{wiki_totals["total_edits"]}}</strong> edits and
+                    <strong>{{wiki_totals["total_new_pages"]}}</strong> new pages by
+                    <strong>{{wiki_totals["total_users"]}}</strong> users.<br />
+                    Tasks: <strong>{{ph_totals["opened"]}}</strong> tasks opened,
+                    <strong>{{ph_totals["closed"]}}</strong> closed.<br /> and
+                    <strong>{{ph_totals["total_open"]}}</strong> open tasks yet,
+                </blockquote>
 
-
-            <div class="clearfix"></div>
-            <h2 style="text-align:center;"><span class="glyphicon glyphicon-th-list" aria-hidden="true">&nbsp;</span>Log</h2>
-            <br />
-            <div class=col-md-12>
-                <ul>
-                {% for log in metadata["teams_log"] %}
-                    <li>{{log}}:  {{metadata["teams_log"][log]}} </li>
+            <div class="row">
+                <div class="clearfix"></div>
+                <h2 style="text-align:center;"><span class="glyphicon glyphicon-th-list" aria-hidden="true">&nbsp;</span>Teams Log</h2>
+                <br />
+                {% for log in metadata["teams_log"]%}
+                  <div class="col-xs-12 col-md-12">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">{{log}}</h3>
+                      </div>
+                      <div class="panel-body">{{metadata["teams_log"][log]}}</div>
+                    </div>
+                  </div>
                 {% endfor %}
-                </ul>
             </div>
-
             <h2 style="text-align:center;"><span class="glyphicon glyphicon-stats" aria-hidden="true">&nbsp;</span>Statistics</h2>
             <div class="col-md-12">
                 <h2>Phabricator</h2>
