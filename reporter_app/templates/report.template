@@ -6,9 +6,9 @@
         <div class="row text-justify">
             <div class="col-xs-12 col-md-9">
                 <!-- <small>&lt; Previous</small> -->
-                <h1>{{title}}</h1>
-                <h3 style="text-align:center;">{{dataspan}}</h3>
-                <blockquote>{{message}}</blockquote>
+                <h1>{{metadata["title"]}}</h1>
+                <h3 style="text-align:center;">From {{metadata["start_date"].date()}} to {{metadata["end_date"].date()}}</h3>
+                <blockquote>{{metadata["message"]}}</blockquote>
                 <h3>In a nutshell:</h3>
                 <blockquote
                 style="text-align:center;">Code: <strong>{{git_totals["total_commits"]}}</strong> commits,
@@ -21,8 +21,20 @@
                 <strong>{{ph_totals["closed"]}}</strong> closed.<br /> and
                 <strong>{{ph_totals["total_open"]}}</strong> open tasks yet,
             </blockquote>
-            <h2 style="text-align:center;"><span class="glyphicon glyphicon-stats" aria-hidden="true">&nbsp;</span>Statistics</h2>
 
+
+            <div class="clearfix"></div>
+            <h2 style="text-align:center;"><span class="glyphicon glyphicon-th-list" aria-hidden="true">&nbsp;</span>Log</h2>
+            <br />
+            <div class=col-md-12>
+                <ul>
+                {% for log in metadata["teams_log"] %}
+                    <li>{{log}}:  {{metadata["teams_log"][log]}} </li>
+                {% endfor %}
+                </ul>
+            </div>
+
+            <h2 style="text-align:center;"><span class="glyphicon glyphicon-stats" aria-hidden="true">&nbsp;</span>Statistics</h2>
             <div class="col-md-12">
                 <h2>Phabricator</h2>
                 <p style="text-align:center;" class="lead">Projects</p>
@@ -39,11 +51,11 @@
                     <tbody>
                         {% for pr in ph_projects %}
                         <tr>
-                            <th scope="row">{{pr}}</th>
-                            <td>{{ph_projects[pr]["closed"]}}</td>
-                            <td>{{ph_projects[pr]["opened"]}}</td>
-                            <td>{{ph_projects[pr]["comments"]}}</td>
-                            <td>{{ph_projects[pr]["total_open"]}}</td>
+                            <th scope="row">{{pr["id"]}}</th>
+                            <td>{{pr["closed"]}}</td>
+                            <td>{{pr["opened"]}}</td>
+                            <td>{{pr["comments"]}}</td>
+                            <td>{{pr["total_open"]}}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -74,13 +86,13 @@
                     <tbody>
                         {% for pr in ph_devs %}
                         <tr>
-                            <th scope="row"><a href={{ph_devs[pr]["profile_url"]}}> {{pr}}</a></th>
-                            <td> <a href={{ph_devs[pr]["profile_url"]}}>
-                                <img src={{ph_devs[pr]["avatar"]}} style="width:40px;height:40px;"> </a></td>
-                            <td>{{ph_devs[pr]["closed"]}}</td>
-                            <td>{{ph_devs[pr]["opened"]}}</td>
-                            <td>{{ph_devs[pr]["resolved"]}}</td>
-                            <td>{{ph_devs[pr]["comments"]}}</td>
+                            <th scope="row"><a href={{pr["profile_url"]}}> {{pr["username"]}}</a></th>
+                            <td> <a href={{pr["profile_url"]}}>
+                                <img src={{pr["avatar"]}} style="width:40px;height:40px;"> </a></td>
+                            <td>{{pr["closed"]}}</td>
+                            <td>{{pr["opened"]}}</td>
+                            <td>{{pr["resolved"]}}</td>
+                            <td>{{pr["comments"]}}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -105,10 +117,10 @@
                         <tbody>
                             {% for gp in git_projs %}
                             <tr>
-                                <td scope="row"><a href="https://github.com/{{gp}}">{{gp}}</a></td>
-                                <td>{{git_projs[gp]["n_commits"]}}</td>
-                                <td>{{git_projs[gp]["additions"]}}</td>
-                                <td>{{git_projs[gp]["deletions"]}}</td>
+                                <td scope="row"><a href="https://github.com/{{gp["repo"]}}">{{gp["repo"]}}</a></td>
+                                <td>{{gp["n_commits"]}}</td>
+                                <td>{{gp["additions"]}}</td>
+                                <td>{{gp["deletions"]}}</td>
                             </tr>
                             {% endfor %}
                             <tfoot>
@@ -139,13 +151,13 @@
                         <tbody>
                             {% for dev in git_devs %}
                             <tr>
-                                <th scope="row"><a href={{git_devs[dev]["profile_url"]}}>{{dev}}</a></th>
-                                <td> <a href={{git_devs[dev]["profile_url"]}}>
-                                    <img src={{git_devs[dev]["avatar"]}} style="width:40px;height:40px;"> </a></td>
-                                <td>{{git_devs[dev]["total_commits"]}}</td>
-                                <td>{{git_devs[dev]["total_additions"]}}</td>
-                                <td>{{git_devs[dev]["total_deletions"]}}</td>
-                                <td>{{git_devs[dev]["total_contributions"]}}</td>
+                                <th scope="row"><a href={{dev["profile_url"]}}>{{dev["username"]}}</a></th>
+                                <td> <a href={{dev["profile_url"]}}>
+                                    <img src={{dev["avatar"]}} style="width:40px;height:40px;"> </a></td>
+                                <td>{{dev["total_commits"]}}</td>
+                                <td>{{dev["total_additions"]}}</td>
+                                <td>{{dev["total_deletions"]}}</td>
+                                <td>{{dev["total_contributions"]}}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -208,33 +220,23 @@
                     <tbody>
                         {% for au in wiki_authors %}
                         <tr>
-                            <td scope="row">{{au}}</td>
-                            <td>{{wiki_authors[au]["edits"]}}</td>
-                            <td>{{wiki_authors[au]["additions"]}}</td>
-                            <td>{{wiki_authors[au]["deletions"]}}</td>
-                            <td>{{wiki_authors[au]["new_pages"]}}</td>
-                            <td>{{wiki_authors[au]["score"]}}</td>
+                            <td scope="row">{{au["username"]}}</td>
+                            <td>{{au["edits"]}}</td>
+                            <td>{{au["additions"]}}</td>
+                            <td>{{au["deletions"]}}</td>
+                            <td>{{au["new_pages"]}}</td>
+                            <td>{{au["score"]}}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
-            </div>
-
-            <div class="clearfix"></div>
-            <h2 style="text-align:center;"><span class="glyphicon glyphicon-th-list" aria-hidden="true">&nbsp;</span>Log</h2>
-            <br />
-            <div class="panel panel-default">
-                {% for cm in commits %}
-                <div class="panel-heading"><a href="https://git.io/viOP4">{{cm.author}}</a></div>
-                <div style="font-family:monospace;" class="panel-body">{{cm.comment}}</div>
-                {% endfor %}
             </div>
         </div>
 
         <!-- Second column -->
         <div class="col-xs-12 col-md-3">
             <h3><span class="glyphicon glyphicon-time" aria-hidden="true">&nbsp;</span>Previous report</h3>
-            <p class="center-block" style="text-align:center;">  <a href="{{previous_report_path}}">{{previous_report_data}}</a></p>
+            <p class="center-block" style="text-align:center;">  <a href="{{metadata["previous_report"]}}">{{previous_report_data}}</a></p>
             <div style="height:20px;margin-top: 10px;"></div>
             <img src="//i.imgur.com/PLvzmeV.png" class="img-responsive" />
             <!-- <h2 class="text-center">Join WikiToLearn!</h2> -->
