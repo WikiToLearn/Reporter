@@ -11,8 +11,8 @@ RUN pip3 install pymongo==3.3.0
 RUN pip3 install PyYAML==3.12
 
 COPY ./src /opt
-WORKDIR /opt
+ADD ./update.cron /etc/cron.d/
 
-ADD ./data_aggregator.cron /etc/cron.d/
+WORKDIR /opt
 
 ENTRYPOINT sh entrypoint.sh
