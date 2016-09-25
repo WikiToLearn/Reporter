@@ -1,6 +1,5 @@
 #!/bin/bash
 
-rm -rf /tmp/reports_settings
-git clone https://github.com/WikiToLearn/ReportsSettings.git
+git pull origin master
 
 python data_aggregator.py

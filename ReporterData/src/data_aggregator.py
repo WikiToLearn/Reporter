@@ -18,7 +18,7 @@ def update_settings():
     This method reads the reports configurations from yaml files and
     fetch the data requested. The metadata are then stored in the metadata_store.
     '''
-    for repo in glob.glob(config.settings_dir+"/*"):
+    for repo in glob.glob(config.settings_dir+"/*.yaml"):
         meta = yaml.load(open(repo, "r"))
         db["reports_metadata"].update({"id":meta["id"]},meta, upsert=True)
         print(">>> Reading report: {}".format(meta["id"]))
@@ -34,56 +34,96 @@ def fetch_data(id, start_date, end_date, repos, phab_groups, mediawiki_langs ):
     #checking if the id is in the db
     data = db["reports_data"].find_one({"id":id})
     if data == None:
-        data = {"id": id}
+        data = {"id": id, "start_date": start_date, "end_date": end_date}
         data["git"] = []
         data["phabricator"] = []
         data["mediawiki"] = {}
         git_metadata = []
         ph_metadata = {}
     else:
-        #git metadata
-        git_metadata = []
-        for g in data["git"]:
-            git_metadata.append(g["repo"])
-        #loading phabrictor metadata
-        ph_metadata = {}
-        for p in data["phabricator"]:
-            ph_metadata[p["id"]] = p["phids"]
+        #checking if the datas are changed
+        if data["start_date"]!= start_date or data["end_date"]!=end_date:
+            #wipe out all the dataset
+            data = {"id": id, "start_date": start_date, "end_date": end_date}
+            data["git"] = []
+            data["phabricator"] = []
+            data["mediawiki"] = {}
+            git_metadata = []
+            ph_metadata = {}
+        else:
+            #git metadata
+            git_metadata = []
+            for g in data["git"]:
+                git_metadata.append(g["repo"])
+            #loading phabrictor metadata
+            ph_metadata = {}
+            for p in data["phabricator"]:
+                ph_metadata[p["id"]] = p["phids"]
 
     #getting data from git
     print("Fetching git data...")
+    new_git_data = []
+    #saving old data that is requested again
+    for oldrepo in data["git"]:
+        if oldrepo["repo"] in repos:
+            #saving it
+            print("Repo {} already fetched...".format(oldrepo["repo"]))
+            new_git_data.append(oldrepo)
+        else:
+            print("Deleted repo: {}".format(oldrepo["repo"]))
+    #adding new requested repos
     for repo in repos:
-        if repo in git_metadata:
-            print("Repo {} already fetched...".format(repo))
-            continue
-        data["git"].append(gp.get_complete_stats(repo, start_date, end_date))
-        #calculating totals for git
+        if repo not in git_metadata:
+            new_git_data.append(gp.get_complete_stats(repo, start_date, end_date))
+    #saving new data
+    data["git"] = new_git_data
+    #calculating totals for git
     print("Calculating git totals...")
     data["totals_git"] = calculate_totals_git(data)
 
     #getting data from phab
     print("Fetching phabricator data...")
+    new_phab_data = []
+    #saving old data requested again
+    for oph in data["phabricator"]:
+        if oph["id"] in phab_groups:
+            if oph["phids"] == phab_groups[oph["id"]]:
+                #saving it
+                print("Phab group {} already fetched...".format(oph["id"]))
+                new_phab_data.append(oph)
+        else:
+            print("Deleted phab group: {}".format(oph["id"]))
+    #adding new data and modified groups
     for ph_gr in phab_groups:
         if ph_gr in ph_metadata:
-            if  phab_groups[ph_gr] == ph_metadata[ph_gr]:
-                print("Phabricator group {} already fetched...".format(ph_gr))
-                continue
-        ph_data = pp.calculate_generic_stats(ph_gr,phab_groups[ph_gr],
-                                             start_date, end_date)
-        data["phabricator"].append(ph_data)
+            if  phab_groups[ph_gr] != ph_metadata[ph_gr]:
+                new_phab_data.append(pp.calculate_generic_stats(ph_gr,phab_groups[ph_gr],
+                                                     start_date, end_date))
+        else:
+            new_phab_data.append(pp.calculate_generic_stats(ph_gr,phab_groups[ph_gr],
+                                                 start_date, end_date))
+    #saving new data
+    data["phabricator"] = new_phab_data
     #calculate totals for phabricator
     print("Calculating phabricator totals...")
     data["totals_phab"] = calculate_totals_phabricator(data)
 
     #mediawiki data
     print("Fetching mediawiki data...")
+    new_mediawiki_data = {}
+    for omd in data["mediawiki"]:
+        if omd in mediawiki_langs:
+            #saving it
+            print("Mediawiki lang {} already fetched...".format(omd))
+            new_mediawiki_data[omd] = data["mediawiki"][omd]
+        else:
+            print("Deleted mediawiki lang {}".format(omd))
     for mlang in mediawiki_langs:
-        if mlang in data["mediawiki"]:
-            print("Lang {} already fetched...".format(mlang))
-            continue
-        print("Lang: {}".format(mlang))
-        mdata =  mp.get_mediawiki_stats(mlang, start_date, end_date)
-        data["mediawiki"][mlang] = mdata
+        if mlang not in data["mediawiki"]:
+            print("Fetching lang: {}".format(mlang))
+            new_mediawiki_data[mlang] = mp.get_mediawiki_stats(mlang, start_date, end_date)
+    #saving data
+    data["mediawiki"] = new_mediawiki_data
     #calculating totals for mediawiki
     print("Calculating mediawiki totals...")
     data["totals_mediawiki"] = calculate_totals_mediawiki(data)

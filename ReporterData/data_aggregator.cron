@@ -1,1 +1,1 @@
-30 7    * * *   root /opt/run.sh
+* /5  * * *   root /opt/run.sh

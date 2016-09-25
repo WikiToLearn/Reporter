@@ -238,8 +238,7 @@
 
         <!-- Second column -->
         <div class="col-xs-12 col-md-3">
-            <h3><span class="glyphicon glyphicon-time" aria-hidden="true">&nbsp;</span>Previous report</h3>
-            <p class="center-block" style="text-align:center;">  <a href="{{metadata["previous_report"]}}">{{previous_report_data}}</a></p>
+            <h3><a href={{metadata["previous_report"]}}><span class="glyphicon glyphicon-time" aria-hidden="true">&nbsp;</span>Previous report</a></h3>
             <div style="height:20px;margin-top: 10px;"></div>
             <img src="//i.imgur.com/PLvzmeV.png" class="img-responsive" />
             <!-- <h2 class="text-center">Join WikiToLearn!</h2> -->

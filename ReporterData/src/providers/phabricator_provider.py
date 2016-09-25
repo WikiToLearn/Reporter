@@ -131,8 +131,6 @@ def count_task_commented(tasks, start_date, end_date):
                         users_counter[user_data['username']] += 1
                     else:
                         users_counter[user_data['username']] = 1
-
-            print("Task {}, comments {}".format())
     return  (counter, users_counter)
 
 
