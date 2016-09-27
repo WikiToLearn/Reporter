@@ -10,7 +10,7 @@ RUN pip3 install requests==2.11.1
 RUN pip3 install pymongo==3.3.0
 RUN pip3 install PyYAML==3.12
 
-COPY ./src /opt
+COPY ./src/ /opt
 ADD ./update.cron /etc/cron.d/
 
 WORKDIR /opt

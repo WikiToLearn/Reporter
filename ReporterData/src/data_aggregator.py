@@ -141,31 +141,43 @@ def calculate_totals_phabricator(data):
                 "total_open" : 0,
                 "users_stats": []
             }
+    #calculating totals for users
+    usstats = {}
     for pr in phdata:
         result["opened"] += pr["opened"]
         result["closed"] += pr["closed"]
         result["comments"] += pr["comments"]
         result["total_open"] += pr["total_open"]
-        #calculating totals for users
-        usstats = {}
         for usd in pr["users_stats"]:
             user = usd["username"]
             if user not in usstats:
                 usstats[user] =  {
                     "username": user,
-                    "opened":0,
-                    "closed": 0,
-                    "resolved":0,
-                    "comments":0,
+                    "opened_tasks": [],
+                    "closed_tasks": [],
+                    "resolved_tasks": [],
+                    "not_resolved_tasks": [],
+                    "comments_tasks": [],
                     "avatar": usd["avatar"],
                     "profile_url": usd["profile_url"]}
             #adding
-            usstats[user]["opened"] += usd["opened"]
-            usstats[user]["closed"] += usd["closed"]
-            usstats[user]["resolved"] += usd["resolved"]
-            usstats[user]["comments"] += usd["comments"]
-        for u in usstats:
-            result["users_stats"].append(usstats[u])
+            usstats[user]["opened_tasks"] += usd["opened_tasks"]
+            usstats[user]["closed_tasks"] += usd["closed_tasks"]
+            usstats[user]["resolved_tasks"] += usd["resolved_tasks"]
+            usstats[user]["not_resolved_tasks"] += usd["not_resolved_tasks"]
+            usstats[user]["comments_tasks"] += usd["comments_tasks"]
+    for u in usstats:
+        usstats[u]["opened_tasks"] =  list(set(usstats[u]["opened_tasks"]))
+        usstats[u]["closed_tasks"] =  list(set(usstats[u]["closed_tasks"]))
+        usstats[u]["resolved_tasks"] =  list(set(usstats[u]["resolved_tasks"]))
+        usstats[u]["not_resolved_tasks"] =  list(set(usstats[u]["resolved_tasks"]))
+        usstats[u]["comments_tasks"] =  list(set(usstats[u]["comments_tasks"]))
+        usstats[u]["opened"] = len(usstats[u]["opened_tasks"])
+        usstats[u]["closed"] = len(usstats[u]["closed_tasks"])
+        usstats[u]["resolved"] = len(usstats[u]["resolved_tasks"])
+        usstats[u]["not_resolved"] = len(usstats[u]["not_resolved_tasks"])
+        usstats[u]["comments"] = len(usstats[u]["comments_tasks"])
+        result["users_stats"].append(usstats[u])
     return result
 
 
@@ -177,12 +189,12 @@ def calculate_totals_git(data):
         "total_deletions": 0,
         "users_stats" : []
         }
+    #calculating totals for users
+    usstats = {}
     for gp in gdata:
         result["total_commits"] += gp["n_commits"]
         result["total_additions"] += gp["additions"]
         result["total_deletions"] += gp["deletions"]
-        #calculating totals for users
-        usstats = {}
         for usd in gp["users_stats"]:
             user = usd["username"]
             if user not in usstats:
@@ -199,8 +211,8 @@ def calculate_totals_git(data):
             usstats[user]["total_commits"] += usd["commits"]
             usstats[user]["total_additions"] += usd["additions"]
             usstats[user]["total_deletions"] += usd["deletions"]
-        for u in usstats:
-            result["users_stats"].append(usstats[u])
+    for u in usstats:
+        result["users_stats"].append(usstats[u])
     return result
 
 def calculate_totals_mediawiki(data):
@@ -212,13 +224,13 @@ def calculate_totals_mediawiki(data):
         "total_new_pages":0,
         "users_stats" : []
     }
+    #calculating totals for users
+    usstats = {}
     for mp in mdata.values():
         result["total_additions"] += mp["total_additions"]
         result["total_deletions"] += mp["total_deletions"]
         result["total_new_pages"] += mp["total_new_pages"]
         result["total_edits"] += mp["total_edits"]
-        #calculating totals for users
-        usstats = {}
         for usd in mp["users_stats"]:
             user = usd["username"]
             if user not in usstats:
@@ -235,8 +247,8 @@ def calculate_totals_mediawiki(data):
             usstats[user]["additions"] += usd["additions"]
             usstats[user]["deletions"] += usd["deletions"]
             usstats[user]["score"] = usd["new_pages"] *10 + usd["edits"]
-        for u in usstats:
-            result["users_stats"].append(usstats[u])
+    for u in usstats:
+        result["users_stats"].append(usstats[u])
     result["total_users"] = len(result["users_stats"])
     return result
 

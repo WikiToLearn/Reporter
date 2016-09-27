@@ -84,6 +84,7 @@ def get_user_metadata(phid):
 def count_status_transition(tasks, oldstatus, newstatus_list, start_date, end_date):
     counter = 0
     users_counter = {}
+    users_task_list = {}
     print(oldstatus, " ---> ", newstatus_list)
     for phid, task in tasks.items():
         print("Checking task status: T{}".format(task['id']))
@@ -105,12 +106,15 @@ def count_status_transition(tasks, oldstatus, newstatus_list, start_date, end_da
                         users_counter[user_data['username']] += 1
                     else:
                         users_counter[user_data['username']] = 1
-    return (counter, users_counter)
+                        users_task_list[user_data['username']] = []
+                    users_task_list[user_data['username']].append(task["id"])
+    return (counter, users_counter, users_task_list)
 
 
 def count_task_commented(tasks, start_date, end_date):
     counter = 0
     users_counter = {}
+    users_task_list = {}
     for phid, task in tasks.items():
         print("Checking comments to task: T{}".format(task['id']))
         data = {"ids[0]": task['id']}
@@ -131,7 +135,9 @@ def count_task_commented(tasks, start_date, end_date):
                         users_counter[user_data['username']] += 1
                     else:
                         users_counter[user_data['username']] = 1
-    return  (counter, users_counter)
+                        users_task_list[user_data['username']] = []
+                    users_task_list[user_data['username']].append(task["id"])
+    return  (counter, users_counter, users_task_list)
 
 
 closed_status = [ "resolved",  "wontfix", "invalid",
@@ -173,9 +179,12 @@ def calculate_generic_stats(id, proj_ids, start_date, end_date):
                 "resolved":0,
                 "not_resolved":0,
                 "avatar" : users_name_cache[user]["avatar"],
-                "profile_url" : users_name_cache[user]["profile_url"]
+                "profile_url" : users_name_cache[user]["profile_url"],
+                "opened_tasks" : [], "closed_tasks": [],"comments_tasks":[],
+                "resolved_tasks" : [], "not_resolved_tasks": []
             }
         users_stats[user]["opened"] += open_stat[1][user]
+        users_stats[user]["opened_tasks"] += open_stat[2][user]
 
     closed_stat = count_status_transition(filt_tasks['close'],"open",
                                           closed_status, start_date, end_date)
@@ -190,9 +199,12 @@ def calculate_generic_stats(id, proj_ids, start_date, end_date):
                 "resolved":0,
                 "not_resolved":0,
                 "avatar" : users_name_cache[user]["avatar"],
-                "profile_url" : users_name_cache[user]["profile_url"]
+                "profile_url" : users_name_cache[user]["profile_url"],
+                "opened_tasks" : [], "closed_tasks": [],"comments_tasks":[],
+                "resolved_tasks" : [], "not_resolved_tasks": []
             }
         users_stats[user]["closed"] += closed_stat[1][user]
+        users_stats[user]["closed_tasks"] += closed_stat[2][user]
 
     resolved_stat = count_status_transition(filt_tasks['close'],
                                             "open", ["resolved"], start_date, end_date)
@@ -207,9 +219,12 @@ def calculate_generic_stats(id, proj_ids, start_date, end_date):
                 "resolved":0,
                 "not_resolved":0,
                 "avatar" : users_name_cache[user]["avatar"],
-                "profile_url" : users_name_cache[user]["profile_url"]
+                "profile_url" : users_name_cache[user]["profile_url"],
+                "opened_tasks" : [], "closed_tasks": [],"comments_tasks":[],
+                "resolved_tasks" : [], "not_resolved_tasks": []
             }
         users_stats[user]["resolved"] += resolved_stat[1][user]
+        users_stats[user]["resolved_tasks"] += resolved_stat[2][user]
 
     not_resolved_stat = count_status_transition(filt_tasks['close'],
                                              "open", notsolved_status, start_date, end_date)
@@ -224,9 +239,12 @@ def calculate_generic_stats(id, proj_ids, start_date, end_date):
                 "resolved":0,
                 "not_resolved":0,
                 "avatar" : users_name_cache[user]["avatar"],
-                "profile_url" : users_name_cache[user]["profile_url"]
+                "profile_url" : users_name_cache[user]["profile_url"],
+                "opened_tasks" : [], "closed_tasks": [],"comments_tasks":[],
+                "resolved_tasks" : [], "not_resolved_tasks": []
             }
         users_stats[user]["not_resolved"] += not_resolved_stat[1][user]
+        users_stats[user]["not_resolved_tasks"]+= not_resolved_stat[2][user]
 
 
     comments_stat = count_task_commented(filt_tasks["open"], start_date, end_date) + \
@@ -242,9 +260,12 @@ def calculate_generic_stats(id, proj_ids, start_date, end_date):
                 "resolved":0,
                 "not_resolved":0,
                 "avatar" : users_name_cache[user]["avatar"],
-                "profile_url" : users_name_cache[user]["profile_url"]
+                "profile_url" : users_name_cache[user]["profile_url"],
+                "opened_tasks" : [], "closed_tasks": [],"comments_tasks":[],
+                "resolved_tasks" : [], "not_resolved_tasks": []
             }
         users_stats[user]["comments"] += comments_stat[1][user]
+        users_stats[user]["comments_tasks"] += comments_stat[2][user]
 
     for u in users_stats:
         result["users_stats"].append(users_stats[u])
