@@ -1,3 +1,4 @@
 DB_HOST = "mongodb"
 DB_PORT = 27017
-settings_dir = "/tmp/reports_settings"
+metadata_dir = "/tmp/reports_settings"
+sleep_seconds = 3600

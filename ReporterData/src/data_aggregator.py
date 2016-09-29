@@ -5,6 +5,8 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 from bson.json_util import dumps
 import config
+import subprocess
+import time
 import json
 import glob
 import yaml
@@ -18,7 +20,7 @@ def update_settings():
     This method reads the reports configurations from yaml files and
     fetch the data requested. The metadata are then stored in the metadata_store.
     '''
-    for repo in glob.glob(config.settings_dir+"/*.yaml"):
+    for repo in glob.glob(config.metadata_dir+"/*.yaml"):
         meta = yaml.load(open(repo, "r"))
         db["reports_metadata"].update({"id":meta["id"]},meta, upsert=True)
         print(">>> Reading report: {}".format(meta["id"]))
@@ -253,4 +255,8 @@ def calculate_totals_mediawiki(data):
     return result
 
 if __name__ == '__main__':
-    update_settings()
+    while(1):
+        update_settings()
+        time.sleep(config.sleep_seconds)
+        print("Updating metadata repo...")
+        subprocess.run(["./update_metadata.sh",config.metadata_dir])
