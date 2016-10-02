@@ -5,9 +5,11 @@
 
 <div class="list-group col-md-12">
     {% for rep in reports %}
-        <a href={{rep["id"]}} class="list-group-item">{{rep["title"]}} - From {{rep["start_date"].date()}} to {{rep["end_date"].date()}}</a>
+        <a href={{rep["id"]}} class="list-group-item">
+            <h4 class="list-group-item-heading">{{rep["title"]}} - From {{rep["start_date"].date()}} to {{rep["end_date"].date()}}</h4>
+            {{rep["message"]}}
+        </a>
     {% endfor %}
 </div>
-
 
 {% endblock %}

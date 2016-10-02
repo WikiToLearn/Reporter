@@ -22,12 +22,4 @@ def get_report_metadata(id):
 
 def get_reports_list(status):
     docs = [doc for doc in db["reports_metadata"].find({"status":status})]
-    result = []
-    for d in docs:
-        result.append({
-                "id": d["id"],
-                "title":d["title"],
-                "start_date": d["start_date"],
-                "end_date": d["end_date"]
-            })
-    return result
+    return docs
