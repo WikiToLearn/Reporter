@@ -80,7 +80,7 @@ $(document).ready(function() {
             el: "#commits-stats",
 
             data: {
-                commits : null
+                commits : []
             },
 
             created :  function () {

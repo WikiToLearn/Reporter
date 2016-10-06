@@ -44,77 +44,6 @@
             <h2 style="text-align:center;"><span class="glyphicon glyphicon-stats" aria-hidden="true">&nbsp;</span>Statistics</h2>
 
 
-
-            <div class="col-md-12" id="commits-stats" start-date="{{metadata["start_date"].date()}}" end-date="{{metadata["end_date"].date()}}">
-                <p style="text-align:center;" class="lead">Commits</p>
-
-                <git-searchbar :repos="{{git_projs}}" :devs="{{git_devs}}" v-on:changeddata="fetchData" ></git-searchbar>
-                <git-commits :commits="commits" ></git-commits>
-
-            </div>
-
-            {% raw %}
-            <template id="git-searchbar">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="input-group">
-                            <div class="input-group-btn">
-                                <button type="button" class="btn btn-default dropdown-toggle"
-                                id ="repo_selected"
-                                data-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">{{selectedRepo}}<span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li v-for="repo in repos"><a v-on:click="chosenRepo">{{repo.repo}}</a></li>
-                                </ul>
-                            </div>
-                            <div class="input-group-btn">
-                                <button type="button" class="btn btn-default dropdown-toggle"
-                                id ="commit_author"
-                                data-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">{{selectedAuthor}}<span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li v-for="dev in devs"><a v-on:click="chosenAuthor">{{dev.username}}</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a v-on:click="chosenAuthor">All</a></li>
-                                </ul>
-                            </div>
-                        </div><!-- /input-group -->
-                    </div>
-                    <div class="col-md-6">
-                        <input id="cquery" type="text" v-model="commitQuery"
-                                class="form-control" aria-label="..." placeholder="message filter">
-                    </div>
-                </div>
-            </template>
-
-            <template id="git-commits">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="list-group">
-                            <a v-for="commit in filtercommits(commits)" :href="commit.html_url"  class="list-group-item">
-                                <div class="row">
-                                    <div class="col-md-1">
-                                        <img :src="commit.author.avatar_url" style="width:40px;height:40px;">
-                                    </div>
-                                    <div class="col-md-11">
-                                        <h4 class="list-group-item-heading">{{commit.sha|slice}} - {{commit.commit.author.name}} - {{commit.commit.author.date|fix_date}} </h4>
-                                        <p class="list-group-item-text">{{commit.commit.message}}</p>
-                                    </div>
-                                    </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </template>
-            {% endraw %}
-
-
-
-
-
-
-
-
             <div class="clearfix"></div>
             <p><h3>Content editing</h3></p>
 
@@ -309,6 +238,68 @@
 
 
 
+            <div class="col-md-12" id="commits-stats" start-date="{{metadata["start_date"].date()}}" end-date="{{metadata["end_date"].date()}}">
+                <p style="text-align:center;" class="lead">Query commits</p>
+
+                <git-searchbar :repos="{{git_projs}}" :devs="{{git_devs}}" v-on:changeddata="fetchData" ></git-searchbar>
+                <git-commits :commits="commits" ></git-commits>
+
+            </div>
+
+            {% raw %}
+            <template id="git-searchbar">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default dropdown-toggle"
+                                id ="repo_selected"
+                                data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">{{selectedRepo}}<span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li v-for="repo in repos"><a v-on:click="chosenRepo">{{repo.repo}}</a></li>
+                                </ul>
+                            </div>
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default dropdown-toggle"
+                                id ="commit_author"
+                                data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">{{selectedAuthor}}<span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li v-for="dev in devs"><a v-on:click="chosenAuthor">{{dev.username}}</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a v-on:click="chosenAuthor">All</a></li>
+                                </ul>
+                            </div>
+                        </div><!-- /input-group -->
+                    </div>
+                    <div class="col-md-6">
+                        <input id="cquery" type="text" v-model="commitQuery"
+                                class="form-control" aria-label="..." placeholder="message filter">
+                    </div>
+                </div>
+            </template>
+
+            <template id="git-commits">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="list-group">
+                            <a v-for="commit in filtercommits(commits)" :href="commit.html_url"  class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <img :src="commit.author.avatar_url" style="width:40px;height:40px;">
+                                    </div>
+                                    <div class="col-md-11">
+                                        <h4 class="list-group-item-heading">{{commit.sha|slice}} - {{commit.commit.author.name}} - {{commit.commit.author.date|fix_date}} </h4>
+                                        <p class="list-group-item-text">{{commit.commit.message}}</p>
+                                    </div>
+                                    </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            {% endraw %}
 
         </div>
 

@@ -20,16 +20,26 @@ def update_settings():
     This method reads the reports configurations from yaml files and
     fetch the data requested. The metadata are then stored in the metadata_store.
     '''
+    #getting previous metadata_id
+    previous_metadata = list(db["reports_metadata"].find({}))
+    new_ids = []
     for repo in glob.glob(config.metadata_dir+"/*.yaml"):
         meta = yaml.load(open(repo, "r"))
         db["reports_metadata"].update({"id":meta["id"]},meta, upsert=True)
         print(">>> Reading report: {}".format(meta["id"]))
+        new_ids.append(meta["id"])
         fetch_data(meta["id"], meta["start_date"],
                         meta["end_date"], meta["git_repos"],
                         meta["phab_groups"], meta["mediawiki_langs"])
         #updating metadata
         db["reports_metadata"].replace_one({"id":meta["id"]},
                                            meta, upsert=True)
+    #checking if we have data to Delete
+    for rp in previous_metadata:
+        if rp["id"] not in new_ids:
+            print(">>> Deleting report: {}".format(rp["id"]))
+            db["reports_metadata"].delete_one({"id": rp["id"]})
+            db["reports_data"].delete_one({"id": rp["id"]})
 
 
 def fetch_data(id, start_date, end_date, repos, phab_groups, mediawiki_langs ):
