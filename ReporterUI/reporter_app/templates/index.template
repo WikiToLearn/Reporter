@@ -7,7 +7,7 @@
     {% for rep in reports %}
         <a href={{rep["id"]}} class="list-group-item">
             <h4 class="list-group-item-heading">{{rep["title"]}} - From {{rep["start_date"].date()}} to {{rep["end_date"].date()}}</h4>
-            {{rep["message"]}}
+            {{rep["message_short"]}}
         </a>
     {% endfor %}
 </div>
