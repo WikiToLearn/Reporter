@@ -3,323 +3,328 @@
 {% block title %}WikiToLearn Reports{% endblock %}
 {% block container %}
 
-        <div class="row text-justify">
-            <div class="col-xs-12 col-md-9">
-                <!-- <small>&lt; Previous</small> -->
-                <h1>{{metadata["title"]}}</h1>
-                <h3 style="text-align:center;">From {{metadata["start_date"].date()}} to {{metadata["end_date"].date()}}</h3>
-                <blockquote>{{metadata["message"]}}</blockquote>
-                <h3>In a nutshell:</h3>
-                <blockquote
-                style="text-align:center;">Code: <strong>{{git_totals["total_commits"]}}</strong> commits,
-                    <strong>+{{git_totals["total_additions"]}} {{git_totals["total_deletions"]}}</strong> lines.<br />
-                    Content: <strong>{{wiki_totals["total_edits"]}}</strong> edits and
-                    <strong>{{wiki_totals["total_new_pages"]}}</strong> new pages by
-                    <strong>{{wiki_totals["total_users"]}}</strong> users.<br />
-                    Tasks: <strong>{{ph_totals["opened"]}}</strong> tasks opened,
-                    <strong>{{ph_totals["closed"]}}</strong> closed.<br />
-                    {% if (ph_totals["opened"] - ph_totals["closed"]) >0 %}
-                    <strong> +{{ph_totals["opened"] - ph_totals["closed"]}}</strong> tasks in this period and
-                    {%else %}
-                    <strong> {{ph_totals["opened"] - ph_totals["closed"]}}</strong> tasks in this period and
-                    {%endif %}
-                    <strong>{{ph_totals["total_open"]}}</strong> open tasks yet,
-                </blockquote>
+<div class="row text-justify">
+    <div class="col-xs-12 col-md-9">
+        <!-- <small>&lt; Previous</small> -->
+        <h1>{{metadata["title"]}}</h1>
+        <h3 style="text-align:center;">From {{metadata["start_date"].date()}} to {{metadata["end_date"].date()}}</h3>
+        <blockquote>{{metadata["message"]}}</blockquote>
+        <h3>In a nutshell:</h3>
+        <blockquote
+        style="text-align:center;">Code: <strong>{{git_totals["total_commits"]}}</strong> commits,
+            <strong>+{{git_totals["total_additions"]}} {{git_totals["total_deletions"]}}</strong> lines.<br />
+            Content: <strong>{{wiki_totals["total_edits"]}}</strong> edits and
+            <strong>{{wiki_totals["total_new_pages"]}}</strong> new pages by
+            <strong>{{wiki_totals["total_users"]}}</strong> users.<br />
+            Tasks: <strong>{{ph_totals["opened"]}}</strong> tasks opened,
+            <strong>{{ph_totals["closed"]}}</strong> closed.<br />
+            {% if (ph_totals["opened"] - ph_totals["closed"]) >0 %}
+            <strong> +{{ph_totals["opened"] - ph_totals["closed"]}}</strong> tasks in this period and
+            {%else %}
+            <strong> {{ph_totals["opened"] - ph_totals["closed"]}}</strong> tasks in this period and
+            {%endif %}
+            <strong>{{ph_totals["total_open"]}}</strong> open tasks yet,
+        </blockquote>
 
-            <div class="row">
-                <div class="clearfix"></div>
-                <h2 style="text-align:center;"><span class="glyphicon glyphicon-th-list" aria-hidden="true">&nbsp;</span>Teams Log</h2>
-                <br />
-                {% for log in metadata["teams_log"]%}
-                  <div class="col-xs-12 col-md-12">
-                    <div class="panel panel-default">
-                      <div class="panel-heading">
-                        <h3 class="panel-title">{{log}}</h3>
-                      </div>
-                      <div class="panel-body">{{metadata["teams_log"][log]}}</div>
-                    </div>
-                  </div>
-                {% endfor %}
-            </div>
-            <h2 style="text-align:center;"><span class="glyphicon glyphicon-stats" aria-hidden="true">&nbsp;</span>Statistics</h2>
-
-
+        <div class="row">
             <div class="clearfix"></div>
-            <p><h3>Content editing</h3></p>
+            <h2 style="text-align:center;"><span class="glyphicon glyphicon-th-list" aria-hidden="true">&nbsp;</span>Teams Log</h2>
+            <br />
+            {% for log in metadata["teams_log"]%}
+              <div class="col-xs-12 col-md-12">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">{{log}}</h3>
+                  </div>
+                  <div class="panel-body">{{metadata["teams_log"][log]}}</div>
+                </div>
+              </div>
+            {% endfor %}
+        </div>
+        <h2 style="text-align:center;"><span class="glyphicon glyphicon-stats" aria-hidden="true">&nbsp;</span>Statistics</h2>
 
-            <div class="col-md-12">
-                <p style="text-align:center;" class="lead">Language portals</p>
-                <table class="table table-bordered table-striped" id="wiki_plat_table">
-                    <thead>
-                        <tr>
-                            <th>Language</th>
-                            <th>Edits</th>
-                            <th>Additions</th>
-                            <th>Deletions</th>
-                            <th>New pages</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for wi in wiki_plats %}
-                        <tr>
-                            <td scope="row">{{wi}}</td>
-                            <td>{{wiki_plats[wi]["total_edits"]}}</td>
-                            <td>{{wiki_plats[wi]["total_additions"]}}</td>
-                            <td>{{wiki_plats[wi]["total_deletions"]*-1}}</td>
-                            <td>{{wiki_plats[wi]["total_new_pages"]}}</td>
-                        </tr>
-                        {% endfor %}
-                        <tfoot>
-                            <tr>
-                                <th scope="row"></th>
-                                <td>{{wiki_totals["total_edits"]}}</td>
-                                <td>{{wiki_totals["total_additions"]}}</td>
-                                <td>{{wiki_totals["total_deletions"]*-1}}</td>
-                                <td>{{wiki_totals["total_new_pages"]}}</td>
-                            </tr>
-                        </tfoot>
-                    </tbody>
-                </table>
-            </div>
 
-            <div class="col-md-12">
-                <p style="text-align:center;" class="lead">Top editors</p>
-                <table class="table table-bordered table-striped" id="wiki_users_table">
-                    <thead>
-                        <tr>
-                            <th>Author</th>
-                            <th>Edits</th>
-                            <th>Additions</th>
-                            <th>Deletions</th>
-                            <th>New pages</th>
-                            <th>Score</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for au in wiki_authors %}
-                        <tr>
-                            <td scope="row">{{au["username"]}}</td>
-                            <td>{{au["edits"]}}</td>
-                            <td>{{au["additions"]}}</td>
-                            <td>{{au["deletions"]*-1}}</td>
-                            <td>{{au["new_pages"]}}</td>
-                            <td>{{au["score"]}}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="clearfix"></div>
+        <p><h3>Content editing</h3></p>
 
-            <div class="col-md-12">
-                <h2>Phabricator</h2>
-                <p style="text-align:center;" class="lead">Projects</p>
-                <table class="table table-bordered table-striped" id="phab_general_tabel">
-                    <thead>
-                        <tr>
-                            <th>Sub-project</th>
-                            <th>Closed tasks</th>
-                            <th>Opened tasks</th>
-                            <th>Comments</th>
-                            <th>Total open tasks</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for pr in ph_projects %}
-                        <tr>
-                            <th scope="row">{{pr["id"]}}</th>
-                            <td>{{pr["closed"]}}</td>
-                            <td>{{pr["opened"]}}</td>
-                            <td>{{pr["comments"]}}</td>
-                            <td>{{pr["total_open"]}}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
+        <div class="col-md-12">
+            <p style="text-align:center;" class="lead">Language portals</p>
+            <table class="table table-bordered table-striped" id="wiki_plat_table">
+                <thead>
+                    <tr>
+                        <th>Language</th>
+                        <th>Edits</th>
+                        <th>Additions</th>
+                        <th>Deletions</th>
+                        <th>New pages</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for wi in wiki_plats %}
+                    <tr>
+                        <td scope="row">{{wi}}</td>
+                        <td>{{wiki_plats[wi]["total_edits"]}}</td>
+                        <td>{{wiki_plats[wi]["total_additions"]}}</td>
+                        <td>{{wiki_plats[wi]["total_deletions"]*-1}}</td>
+                        <td>{{wiki_plats[wi]["total_new_pages"]}}</td>
+                    </tr>
+                    {% endfor %}
                     <tfoot>
                         <tr>
                             <th scope="row"></th>
-                            <th>{{ph_totals["closed"]}}</th>
-                            <th>{{ph_totals["opened"]}}</th>
-                            <th>{{ph_totals["comments"]}}</th>
-                            <th>{{ph_totals["total_open"]}}</th>
+                            <td>{{wiki_totals["total_edits"]}}</td>
+                            <td>{{wiki_totals["total_additions"]}}</td>
+                            <td>{{wiki_totals["total_deletions"]*-1}}</td>
+                            <td>{{wiki_totals["total_new_pages"]}}</td>
                         </tr>
                     </tfoot>
-                </table>
-            </div>
-            <div class="col-md-12">
-                <p style="text-align:center;" class="lead">Contributors on Phabricator</p>
-                <table class="table table-bordered table-striped" id="phab_users_table">
-                    <thead>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-12">
+            <p style="text-align:center;" class="lead">Top editors</p>
+            <table class="table table-bordered table-striped" id="wiki_users_table">
+                <thead>
+                    <tr>
+                        <th>Author</th>
+                        <th>Edits</th>
+                        <th>Additions</th>
+                        <th>Deletions</th>
+                        <th>New pages</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for au in wiki_authors %}
+                    <tr>
+                        <td scope="row">{{au["username"]}}</td>
+                        <td>{{au["edits"]}}</td>
+                        <td>{{au["additions"]}}</td>
+                        <td>{{au["deletions"]*-1}}</td>
+                        <td>{{au["new_pages"]}}</td>
+                        <td>{{au["score"]}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-12">
+            <h2>Phabricator</h2>
+            <p style="text-align:center;" class="lead">Projects</p>
+            <table class="table table-bordered table-striped" id="phab_general_tabel">
+                <thead>
+                    <tr>
+                        <th>Sub-project</th>
+                        <th>Closed tasks</th>
+                        <th>Opened tasks</th>
+                        <th>Comments</th>
+                        <th>Total open tasks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pr in ph_projects %}
+                    <tr>
+                        <th scope="row">{{pr["id"]}}</th>
+                        <td>{{pr["closed"]}}</td>
+                        <td>{{pr["opened"]}}</td>
+                        <td>{{pr["comments"]}}</td>
+                        <td>{{pr["total_open"]}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th scope="row"></th>
+                        <th>{{ph_totals["closed"]}}</th>
+                        <th>{{ph_totals["opened"]}}</th>
+                        <th>{{ph_totals["comments"]}}</th>
+                        <th>{{ph_totals["total_open"]}}</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="col-md-12">
+            <p style="text-align:center;" class="lead">Contributors on Phabricator</p>
+            <table class="table table-bordered table-striped" id="phab_users_table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Avatar</th>
+                        <th>Closed tasks</th>
+                        <th>Opened tasks</th>
+                        <th>Resolved tasks</th>
+                        <th>Commented tasks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pr in ph_devs %}
+                    <tr>
+                        <th scope="row"><a href={{pr["profile_url"]}}> {{pr["username"]}}</a></th>
+                        <td> <a href={{pr["profile_url"]}}>
+                            <img src={{pr["avatar"]}} style="width:40px;height:40px;"> </a></td>
+                        <td>{{pr["closed"]}}</td>
+                        <td>{{pr["opened"]}}</td>
+                        <td>{{pr["resolved"]}}</td>
+                        <td>{{pr["comments"]}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-12">
+            <p><h2>Git</h2></p>
+            <p style="text-align:center;" class="lead">Git repositories</p>
+
+            <table class="table table-bordered table-striped" id="git_projs_table">
+                <thead>
+                    <tr>
+                        <th>Repo</th>
+                        <th>Commits</th>
+                        <th>Lines added</th>
+                        <th>Lines removed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for gp in git_projs %}
+                    <tr>
+                        <td scope="row"><a href="https://github.com/{{gp["repo"]}}">{{gp["repo"]}}</a></td>
+                        <td>{{gp["n_commits"]}}</td>
+                        <td>{{gp["additions"]}}</td>
+                        <td>{{gp["deletions"]*-1}}</td>
+                    </tr>
+                    {% endfor %}
+                    <tfoot>
                         <tr>
-                            <th>Name</th>
-                            <th>Avatar</th>
-                            <th>Closed tasks</th>
-                            <th>Opened tasks</th>
-                            <th>Resolved tasks</th>
-                            <th>Commented tasks</th>
+                            <th scope="row"></th>
+                            <td>{{git_totals["total_commits"]}}</td>
+                            <td>{{git_totals["total_additions"]}}</td>
+                            <td>{{git_totals["total_deletions"]*-1}}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for pr in ph_devs %}
-                        <tr>
-                            <th scope="row"><a href={{pr["profile_url"]}}> {{pr["username"]}}</a></th>
-                            <td> <a href={{pr["profile_url"]}}>
-                                <img src={{pr["avatar"]}} style="width:40px;height:40px;"> </a></td>
-                            <td>{{pr["closed"]}}</td>
-                            <td>{{pr["opened"]}}</td>
-                            <td>{{pr["resolved"]}}</td>
-                            <td>{{pr["comments"]}}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-md-12">
-                <p><h2>Git</h2></p>
-                <p style="text-align:center;" class="lead">Git repositories</p>
+                    </tfoot>
+                </tbody>
+            </table>
+        </div>
 
-                <table class="table table-bordered table-striped" id="git_projs_table">
-                    <thead>
-                        <tr>
-                            <th>Repo</th>
-                            <th>Commits</th>
-                            <th>Lines added</th>
-                            <th>Lines removed</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for gp in git_projs %}
-                        <tr>
-                            <td scope="row"><a href="https://github.com/{{gp["repo"]}}">{{gp["repo"]}}</a></td>
-                            <td>{{gp["n_commits"]}}</td>
-                            <td>{{gp["additions"]}}</td>
-                            <td>{{gp["deletions"]*-1}}</td>
-                        </tr>
-                        {% endfor %}
-                        <tfoot>
-                            <tr>
-                                <th scope="row"></th>
-                                <td>{{git_totals["total_commits"]}}</td>
-                                <td>{{git_totals["total_additions"]}}</td>
-                                <td>{{git_totals["total_deletions"]*-1}}</td>
-                            </tr>
-                        </tfoot>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="col-md-12">
-                <p style="text-align:center;" class="lead">Top committers</p>
-                <table class="table table-bordered table-striped" id="git_users_table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Avatar</th>
-                            <th>Commits (in this period)</th>
-                            <th>Lines added</th>
-                            <th>Lines removed</th>
-                            <th>Total contributions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for dev in git_devs %}
-                        <tr>
-                            <th scope="row"><a href={{dev["profile_url"]}}>{{dev["username"]}}</a></th>
-                            <td> <a href={{dev["profile_url"]}}>
-                                <img src={{dev["avatar"]}} style="width:40px;height:40px;"> </a></td>
-                            <td>{{dev["total_commits"]}}</td>
-                            <td>{{dev["total_additions"]}}</td>
-                            <td>{{dev["total_deletions"]}}</td>
-                            <td>{{dev["total_contributions"]}}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="col-md-12">
+            <p style="text-align:center;" class="lead">Top committers</p>
+            <table class="table table-bordered table-striped" id="git_users_table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Avatar</th>
+                        <th>Commits (in this period)</th>
+                        <th>Lines added</th>
+                        <th>Lines removed</th>
+                        <th>Total contributions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dev in git_devs %}
+                    <tr>
+                        <th scope="row"><a href={{dev["profile_url"]}}>{{dev["username"]}}</a></th>
+                        <td> <a href={{dev["profile_url"]}}>
+                            <img src={{dev["avatar"]}} style="width:40px;height:40px;"> </a></td>
+                        <td>{{dev["total_commits"]}}</td>
+                        <td>{{dev["total_additions"]}}</td>
+                        <td>{{dev["total_deletions"]}}</td>
+                        <td>{{dev["total_contributions"]}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
 
 
-            <div class="col-md-12" id="commits-stats" start-date="{{metadata["start_date"].date()}}" end-date="{{metadata["end_date"].date()}}">
-                <p style="text-align:center;" class="lead">Query commits</p>
+        <div class="col-md-12" id="commits-stats" start-date="{{metadata["start_date"].date()}}" end-date="{{metadata["end_date"].date()}}">
+            <p style="text-align:center;" class="lead">Query commits</p>
 
-                <git-searchbar :repos="{{git_projs}}" :devs="{{git_devs}}" v-on:changeddata="fetchData" ></git-searchbar>
-                <git-commits :commits="commits" ></git-commits>
+            <git-searchbar :repos="{{git_projs}}" :devs="{{git_devs}}" v-on:changeddata="fetchData" ></git-searchbar>
+            <git-commits :commits="commits" ></git-commits>
 
-            </div>
+        </div>
 
-            {% raw %}
-            <template id="git-searchbar">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="input-group">
-                            <div class="input-group-btn">
-                                <button type="button" class="btn btn-default dropdown-toggle"
-                                id ="repo_selected"
-                                data-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">{{selectedRepo}}<span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li v-for="repo in repos"><a v-on:click="chosenRepo">{{repo.repo}}</a></li>
-                                </ul>
-                            </div>
-                            <div class="input-group-btn">
-                                <button type="button" class="btn btn-default dropdown-toggle"
-                                id ="commit_author"
-                                data-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">{{selectedAuthor}}<span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li v-for="dev in devs"><a v-on:click="chosenAuthor">{{dev.username}}</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a v-on:click="chosenAuthor">All</a></li>
-                                </ul>
-                            </div>
-                        </div><!-- /input-group -->
-                    </div>
-                    <div class="col-md-6">
-                        <input id="cquery" type="text" v-model="commitQuery"
-                                class="form-control" aria-label="..." placeholder="message filter">
-                    </div>
-                </div>
-            </template>
-
-            <template id="git-commits">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="list-group">
-                            <a v-for="commit in filtercommits(commits)" :href="commit.html_url"  class="list-group-item">
-                                <div class="row">
-                                    <div class="col-md-1">
-                                        <img :src="commit.author.avatar_url" style="width:40px;height:40px;">
-                                    </div>
-                                    <div class="col-md-11">
-                                        <h4 class="list-group-item-heading">{{commit.sha|slice}} - {{commit.commit.author.name}} - {{commit.commit.author.date|fix_date}} </h4>
-                                        <p class="list-group-item-text">{{commit.commit.message}}</p>
-                                    </div>
-                                    </div>
-                            </a>
+        {% raw %}
+        <template id="git-searchbar">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle"
+                            id ="repo_selected"
+                            data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">{{selectedRepo}}<span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li v-for="repo in repos"><a v-on:click="chosenRepo">{{repo.repo}}</a></li>
+                            </ul>
                         </div>
-                    </div>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle"
+                            id ="commit_author"
+                            data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">{{selectedAuthor}}<span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li v-for="dev in devs"><a v-on:click="chosenAuthor">{{dev.username}}</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a v-on:click="chosenAuthor">All</a></li>
+                            </ul>
+                        </div>
+                    </div><!-- /input-group -->
                 </div>
-            </template>
-            {% endraw %}
-
-        </div>
-
-        <!-- Second column -->
-        <div class="col-xs-12 col-md-3">
-            <h3><a href={{metadata["previous_report"]}}><span class="glyphicon glyphicon-time" aria-hidden="true">&nbsp;</span>Previous report</a></h3>
-            <div style="height:20px;margin-top: 10px;"></div>
-            <img src="//i.imgur.com/PLvzmeV.png" class="img-responsive" />
-            <!-- <h2 class="text-center">Join WikiToLearn!</h2> -->
-            <p class=lead>
-                If you are interested, see what you can do, chat with us, send us <a href="mailto:info@wikitolearn.org">an e-mail</a>, or simply <a href="https://github.com/WikiToLearn">check out our source code</a>!</p>
-                <div class="text-center">
-                    <a aria-label="Follow @WikiToLearn on GitHub"
-                            data-count-aria-label="# followers on GitHub"
-                            data-style="mega" href="https://github.com/WikiToLearn"
-                            class="github-button">Follow @WikiToLearn</a>
+                <div class="col-md-6">
+                    <input id="cquery" type="text" v-model="commitQuery"
+                            class="form-control" aria-label="..." placeholder="message filter">
                 </div>
             </div>
+        </template>
 
+        <template id="git-commits">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="list-group">
+                        <a v-for="commit in filtercommits(commits)" :href="commit.html_url"  class="list-group-item">
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <img :src="commit.author.avatar_url" style="width:40px;height:40px;">
+                                </div>
+                                <div class="col-md-11">
+                                    <h4 class="list-group-item-heading">{{commit.sha|slice}} - {{commit.commit.author.name}} - {{commit.commit.author.date|fix_date}} </h4>
+                                    <p class="list-group-item-text">{{commit.commit.message}}</p>
+                                </div>
+                                </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </template>
+        {% endraw %}
+
+    </div>
+
+    <!-- Second column -->
+    <div class="col-xs-12 col-md-3">
+        <h3><span class="glyphicon glyphicon-time" aria-hidden="true">&nbsp;</span>Previous reports</h3>
+            <div class="list-group">
+            {% for pr_report in previous_reports %}
+              <a href="/{{pr_report[0]}}" class="list-group-item">{{pr_report[1]}}</a>
+            {% endfor %}
+            </div>
+        <div style="height:20px;margin-top: 10px;"></div>
+        <img src="//i.imgur.com/PLvzmeV.png" class="img-responsive" />
+        <!-- <h2 class="text-center">Join WikiToLearn!</h2> -->
+        <p class=lead>
+        If you are interested, see what you can do, chat with us, send us <a href="mailto:info@wikitolearn.org">an e-mail</a>, or simply <a href="https://github.com/WikiToLearn">check out our source code</a>!</p>
+        <div class="text-center">
+            <a aria-label="Follow @WikiToLearn on GitHub"
+                    data-count-aria-label="# followers on GitHub"
+                    data-style="mega" href="https://github.com/WikiToLearn"
+                    class="github-button">Follow @WikiToLearn</a>
         </div>
+    </div>
+
+</div>
 
 
 {% endblock %}

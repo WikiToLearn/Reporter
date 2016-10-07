@@ -23,3 +23,15 @@ def get_report_metadata(id):
 def get_reports_list(status):
     docs = [doc for doc in db["reports_metadata"].find({"status":status})]
     return docs
+
+def get_previous_reports(id):
+    previous = []
+    pid = db["reports_metadata"].find_one({"id":id})["previous_report"]
+    while True:
+        if pid != None:
+            rp = db["reports_metadata"].find_one({"id":pid})
+            previous.append((rp["id"], rp["title"]))
+            pid = rp["previous_report"]
+        else:
+            break
+    return previous

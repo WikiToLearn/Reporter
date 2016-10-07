@@ -25,7 +25,8 @@ def report(id):
                            git_devs = data["totals_git"]["users_stats"],
                            wiki_plats = data["mediawiki"],
                            wiki_totals = data["totals_mediawiki"],
-                           wiki_authors = data["totals_mediawiki"]["users_stats"]
+                           wiki_authors = data["totals_mediawiki"]["users_stats"],
+                           previous_reports = dagg.get_previous_reports(id)
                            )
 
 
