@@ -30,7 +30,8 @@ def update_settings():
         new_ids.append(meta["id"])
         fetch_data(meta["id"], meta["start_date"],
                         meta["end_date"], meta["git_repos"],
-                        meta["phab_groups"], meta["mediawiki_langs"])
+                        meta["phab_groups"], meta["mediawiki_langs"],
+                        meta["mediawiki_blacklist"])
         #updating metadata
         db["reports_metadata"].replace_one({"id":meta["id"]},
                                            meta, upsert=True)
@@ -42,7 +43,7 @@ def update_settings():
             db["reports_data"].delete_one({"id": rp["id"]})
 
 
-def fetch_data(id, start_date, end_date, repos, phab_groups, mediawiki_langs ):
+def fetch_data(id, start_date, end_date, repos, phab_groups, mediawiki_langs, mediawiki_blacklist):
     #checking if the id is in the db
     data = db["reports_data"].find_one({"id":id})
     if data == None:
@@ -133,7 +134,8 @@ def fetch_data(id, start_date, end_date, repos, phab_groups, mediawiki_langs ):
     for mlang in mediawiki_langs:
         if mlang not in data["mediawiki"]:
             print("Fetching lang: {}".format(mlang))
-            new_mediawiki_data[mlang] = mp.get_mediawiki_stats(mlang, start_date, end_date)
+            new_mediawiki_data[mlang] = mp.get_mediawiki_stats(mlang,
+                                        start_date, end_date, mediawiki_blacklist)
     #saving data
     data["mediawiki"] = new_mediawiki_data
     #calculating totals for mediawiki

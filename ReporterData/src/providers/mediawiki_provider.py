@@ -43,7 +43,7 @@ def get_recentchanges_data(lang, start_date, end_date):
         "new": rclist_new}
 
 
-def get_mediawiki_stats(lang, start_date, end_date):
+def get_mediawiki_stats(lang, start_date, end_date, blacklist):
     data = get_recentchanges_data(lang, start_date, end_date)
     result = {
         "total_new_pages": len(data["new"]),
@@ -55,6 +55,8 @@ def get_mediawiki_stats(lang, start_date, end_date):
     used_users = {}
     for nrc in data['new']:
         user = nrc["user"]
+        if user in blacklist:
+            continue
         result["total_additions"] += nrc["newlen"]
         if user in used_users and "additions" in used_users[user]:
             used_users[user]["additions"] += nrc["newlen"]
@@ -65,6 +67,8 @@ def get_mediawiki_stats(lang, start_date, end_date):
     for erc in data["edit"]:
         ch = erc["newlen"] - erc["oldlen"]
         user = erc["user"]
+        if user in blacklist:
+            continue
         if ch >= 0:
             result["total_additions"] += ch
             if user in used_users and "additions" in used_users[user]:
