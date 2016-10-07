@@ -118,6 +118,7 @@
                     <tr>
                         <th>Sub-project</th>
                         <th>Closed tasks</th>
+                        <th>Resolved tasks</th>
                         <th>Opened tasks</th>
                         <th>Comments</th>
                         <th>Total open tasks</th>
@@ -128,6 +129,7 @@
                     <tr>
                         <th scope="row">{{pr["id"]}}</th>
                         <td>{{pr["closed"]}}</td>
+                        <td>{{pr["resolved"]}}</td>
                         <td>{{pr["opened"]}}</td>
                         <td>{{pr["comments"]}}</td>
                         <td>{{pr["total_open"]}}</td>
@@ -138,6 +140,7 @@
                     <tr>
                         <th scope="row"></th>
                         <th>{{ph_totals["closed"]}}</th>
+                        <th>{{ph_totals["resolved"]}}</th>
                         <th>{{ph_totals["opened"]}}</th>
                         <th>{{ph_totals["comments"]}}</th>
                         <th>{{ph_totals["total_open"]}}</th>
@@ -153,8 +156,8 @@
                         <th>Name</th>
                         <th>Avatar</th>
                         <th>Closed tasks</th>
-                        <th>Opened tasks</th>
                         <th>Resolved tasks</th>
+                        <th>Opened tasks</th>
                         <th>Commented tasks</th>
                     </tr>
                 </thead>
@@ -165,8 +168,8 @@
                         <td> <a href={{pr["profile_url"]}}>
                             <img src={{pr["avatar"]}} style="width:40px;height:40px;"> </a></td>
                         <td>{{pr["closed"]}}</td>
-                        <td>{{pr["opened"]}}</td>
                         <td>{{pr["resolved"]}}</td>
+                        <td>{{pr["opened"]}}</td>
                         <td>{{pr["comments"]}}</td>
                     </tr>
                     {% endfor %}

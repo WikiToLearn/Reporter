@@ -151,8 +151,11 @@ def calculate_totals_phabricator(data):
     result = {
                 "opened" : 0,
                 "closed" : 0,
+                "resolved" : 0,
+                "not_resolved": 0,
                 "comments" : 0,
-                "total_open" : 0,
+                "total_open" : 0 ,
+                "total_close" : 0,
                 "users_stats": []
             }
     #calculating totals for users
@@ -160,8 +163,11 @@ def calculate_totals_phabricator(data):
     for pr in phdata:
         result["opened"] += pr["opened"]
         result["closed"] += pr["closed"]
+        result["resolved"] += pr["resolved"]
+        result["not_resolved"] += pr["not_resolved"]
         result["comments"] += pr["comments"]
         result["total_open"] += pr["total_open"]
+        result["total_close"] += pr["total_close"]
         for usd in pr["users_stats"]:
             user = usd["username"]
             if user not in usstats:
@@ -180,17 +186,18 @@ def calculate_totals_phabricator(data):
             usstats[user]["resolved_tasks"] += usd["resolved_tasks"]
             usstats[user]["not_resolved_tasks"] += usd["not_resolved_tasks"]
             usstats[user]["comments_tasks"] += usd["comments_tasks"]
+    #counting correctly task with multiple references
     for u in usstats:
         usstats[u]["opened_tasks"] =  list(set(usstats[u]["opened_tasks"]))
         usstats[u]["closed_tasks"] =  list(set(usstats[u]["closed_tasks"]))
         usstats[u]["resolved_tasks"] =  list(set(usstats[u]["resolved_tasks"]))
-        usstats[u]["not_resolved_tasks"] =  list(set(usstats[u]["resolved_tasks"]))
+        usstats[u]["not_resolved_tasks"] =  list(set(usstats[u]["not_resolved_tasks"]))
         usstats[u]["comments_tasks"] =  list(set(usstats[u]["comments_tasks"]))
-        usstats[u]["opened"] = len(usstats[u]["opened_tasks"])
-        usstats[u]["closed"] = len(usstats[u]["closed_tasks"])
-        usstats[u]["resolved"] = len(usstats[u]["resolved_tasks"])
-        usstats[u]["not_resolved"] = len(usstats[u]["not_resolved_tasks"])
-        usstats[u]["comments"] = len(usstats[u]["comments_tasks"])
+        usstats[u]["opened"] =  len(usstats[u]["opened_tasks"])
+        usstats[u]["closed"] =  len(usstats[u]["closed_tasks"])
+        usstats[u]["resolved"] =  len(usstats[u]["resolved_tasks"])
+        usstats[u]["not_resolved"] =  len(usstats[u]["not_resolved_tasks"])
+        usstats[u]["comments"] =  len(usstats[u]["comments_tasks"])
         result["users_stats"].append(usstats[u])
     return result
 
