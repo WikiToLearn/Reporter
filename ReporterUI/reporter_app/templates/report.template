@@ -11,11 +11,11 @@
         <blockquote>{{metadata["message"]}}</blockquote>
         <h3>In a nutshell:</h3>
         <blockquote
-        style="text-align:center;">Code: <strong>{{git_totals["total_commits"]}}</strong> commits,
-            <strong>+{{git_totals["total_additions"]}} {{git_totals["total_deletions"]}}</strong> lines.<br />
-            Content: <strong>{{wiki_totals["total_edits"]}}</strong> edits and
+        style="text-align:center;">Content: <strong>{{wiki_totals["total_edits"]}}</strong> edits and
             <strong>{{wiki_totals["total_new_pages"]}}</strong> new pages by
             <strong>{{wiki_totals["total_users"]}}</strong> users.<br />
+            Code: <strong>{{git_totals["total_commits"]}}</strong> commits,
+            <strong>+{{git_totals["total_additions"]}} {{git_totals["total_deletions"]}}</strong> lines.<br />
             Tasks: <strong>{{ph_totals["opened"]}}</strong> tasks opened,
             <strong>{{ph_totals["closed"]}}</strong> closed.<br />
             {% if (ph_totals["opened"] - ph_totals["closed"]) >0 %}
@@ -26,6 +26,7 @@
             <strong>{{ph_totals["total_open"]}}</strong> open tasks yet,
         </blockquote>
 
+        {% if metadata["teams_log"]|length >0 %}
         <div class="row">
             <div class="clearfix"></div>
             <h2 style="text-align:center;"><span class="glyphicon glyphicon-th-list" aria-hidden="true">&nbsp;</span>Teams Log</h2>
@@ -41,9 +42,9 @@
               </div>
             {% endfor %}
         </div>
+        {% endif %}
+
         <h2 style="text-align:center;"><span class="glyphicon glyphicon-stats" aria-hidden="true">&nbsp;</span>Statistics</h2>
-
-
         <div class="clearfix"></div>
         <p><h3>Content editing</h3></p>
 
@@ -315,16 +316,18 @@
             {% endfor %}
             </div>
         <div style="height:20px;margin-top: 10px;"></div>
-        <img src="//i.imgur.com/PLvzmeV.png" class="img-responsive" />
+        <a href="//chat.wikitolearn.org"><img src="//i.imgur.com/PLvzmeV.png" class="img-responsive" /></a>
         <!-- <h2 class="text-center">Join WikiToLearn!</h2> -->
         <p class=lead>
-        If you are interested, see what you can do, chat with us, send us <a href="mailto:info@wikitolearn.org">an e-mail</a>, or simply <a href="https://github.com/WikiToLearn">check out our source code</a>!</p>
+        If you are interested, see what you can do, <a href="//chat.wikitolearn.org">chat with us</a>,
+         send us <a href="mailto:info@wikitolearn.org">an e-mail</a>, or simply <a href="https://github.com/WikiToLearn">check out our source code</a>!</p>
         <div class="text-center">
             <a aria-label="Follow @WikiToLearn on GitHub"
                     data-count-aria-label="# followers on GitHub"
                     data-style="mega" href="https://github.com/WikiToLearn"
                     class="github-button">Follow @WikiToLearn</a>
         </div>
+        <a class='btn btn-success btn-lg center-block' style="border-radius:2px;" href="//join.wikitolearn.org">Join us</a>
     </div>
 
 </div>
