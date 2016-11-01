@@ -1,5 +1,5 @@
 from reporter_app import app
-from flask import render_template, jsonify, request, abort
+from flask import render_template, jsonify, request, abort, redirect, url_for
 import datetime
 import reporter_app.data_aggregator as dagg
 
@@ -28,6 +28,11 @@ def report(id):
                            wiki_authors = data["totals_mediawiki"]["users_stats"],
                            previous_reports = dagg.get_previous_reports(id)
                            )
+
+@app.route('/latest', methods=['GET'])
+def last_report():
+    id =  dagg.get_last_report()["id"]
+    return redirect(url_for("report", id=id))
 
 
 @app.route('/', methods=['GET'])

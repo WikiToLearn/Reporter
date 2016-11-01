@@ -26,6 +26,9 @@ def get_reports_list(status):
                                             [('end_date', pymongo.DESCENDING)])]
     return docs
 
+def get_last_report():
+    return get_reports_list("published")[0]
+
 def get_previous_reports(id):
     previous = []
     pid = db["reports_metadata"].find_one({"id":id})["previous_report"]
