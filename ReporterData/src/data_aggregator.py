@@ -18,7 +18,7 @@ db = client['reports_db']
 def update_settings():
     '''
     This method reads the reports configurations from yaml files and
-    fetch the data requested. The metadata are then stored in the metadata_store.
+    fetch the data requested. The metadata \are then stored in the metadata_store.
     '''
     #getting previous metadata_id
     previous_metadata = list(db["reports_metadata"].find({}))
@@ -232,6 +232,7 @@ def calculate_totals_mediawiki(data):
         "total_deletions": 0,
         "total_edits": 0,
         "total_new_pages":0,
+        "total_new_users": 0,
         "users_stats" : []
     }
     #calculating totals for users
@@ -240,6 +241,7 @@ def calculate_totals_mediawiki(data):
         result["total_additions"] += mp["total_additions"]
         result["total_deletions"] += mp["total_deletions"]
         result["total_new_pages"] += mp["total_new_pages"]
+        result["total_new_users"] += mp["total_new_users"]
         result["total_edits"] += mp["total_edits"]
         for usd in mp["users_stats"]:
             user = usd["username"]

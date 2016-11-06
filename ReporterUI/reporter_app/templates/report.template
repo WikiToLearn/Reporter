@@ -14,6 +14,7 @@
         style="text-align:center;">Content: <strong>{{wiki_totals["total_edits"]}}</strong> edits and
             <strong>{{wiki_totals["total_new_pages"]}}</strong> new pages by
             <strong>{{wiki_totals["total_users"]}}</strong> users.<br />
+            <strong>{{wiki_totals["total_new_users"]}}</strong> new users on all the platform. <br />
             Code: <strong>{{git_totals["total_commits"]}}</strong> commits,
             <strong>+{{git_totals["total_additions"]}} {{git_totals["total_deletions"]}}</strong> lines.<br />
             Tasks: <strong>{{ph_totals["opened"]}}</strong> tasks opened,
@@ -58,6 +59,7 @@
                         <th>Additions</th>
                         <th>Deletions</th>
                         <th>New pages</th>
+                        <th>New user</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -68,6 +70,7 @@
                         <td>{{wiki_plats[wi]["total_additions"]}}</td>
                         <td>{{wiki_plats[wi]["total_deletions"]*-1}}</td>
                         <td>{{wiki_plats[wi]["total_new_pages"]}}</td>
+                        <td>{{wiki_plats[wi]["total_new_users"]}}</td>
                     </tr>
                     {% endfor %}
                     <tfoot>
@@ -77,6 +80,7 @@
                             <td>{{wiki_totals["total_additions"]}}</td>
                             <td>{{wiki_totals["total_deletions"]*-1}}</td>
                             <td>{{wiki_totals["total_new_pages"]}}</td>
+                            <td>{{wiki_totals["total_new_users"]}}</td>
                         </tr>
                     </tfoot>
                 </tbody>

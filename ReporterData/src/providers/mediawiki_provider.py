@@ -42,6 +42,29 @@ def get_recentchanges_data(lang, start_date, end_date):
         "edit": rclist_edit,
         "new": rclist_new}
 
+def get_new_users_number(lang, start_date, end_date ):
+    print("Getting new users for lang: {}".format(lang))
+    params = {"action":"query",
+              "list":"logevents",
+              "format":"json",
+              "ledir": "newer",
+              "lestart": start_date.strftime("%Y%m%d%H%M%S"),
+              "leend": end_date.strftime("%Y%m%d%H%M%S"),
+              "leaction": "newusers/create",
+              "leprop": "user",
+              "rclimit": 100}
+    new_users = []
+    while True:
+        r = requests.get(pconfig.mediawiki_api_url.format(lang),
+                         params=params).json()
+        new_users += r["query"]["logevents"]
+        if "continue" in r:
+            params["rccontinue"] = r["continue"]["rccontinue"]
+            print('#')
+        else:
+            break
+    return len(new_users)
+
 
 def get_mediawiki_stats(lang, start_date, end_date, blacklist):
     data = get_recentchanges_data(lang, start_date, end_date)
@@ -50,6 +73,7 @@ def get_mediawiki_stats(lang, start_date, end_date, blacklist):
         "total_edits": len(data["edit"]),
         "total_additions": 0,
         "total_deletions": 0,
+        "total_new_users" : get_new_users_number(lang, start_date, end_date),
         "users_stats": []
     }
     used_users = {}
