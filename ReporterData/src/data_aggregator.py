@@ -25,7 +25,6 @@ def update_settings():
     new_ids = []
     for repo in glob.glob(config.metadata_dir+"/*.yaml"):
         meta = yaml.load(open(repo, "r"))
-        db["reports_metadata"].update({"id":meta["id"]},meta, upsert=True)
         print(">>> Reading report: {}".format(meta["id"]))
         new_ids.append(meta["id"])
         fetch_data(meta["id"], meta["start_date"],
@@ -46,7 +45,8 @@ def update_settings():
 def fetch_data(id, start_date, end_date, repos, phab_groups, mediawiki_langs, mediawiki_blacklist):
     #checking if the id is in the db
     data = db["reports_data"].find_one({"id":id})
-    if data == None:
+    old_metadata = db["reports_metadata"].find_one({"id":id})
+    if data == None or data["start_date"]!= start_date or data["end_date"]!=end_date:
         data = {"id": id, "start_date": start_date, "end_date": end_date}
         data["git"] = []
         data["phabricator"] = []
@@ -54,24 +54,12 @@ def fetch_data(id, start_date, end_date, repos, phab_groups, mediawiki_langs, me
         git_metadata = []
         ph_metadata = {}
     else:
-        #checking if the datas are changed
-        if data["start_date"]!= start_date or data["end_date"]!=end_date:
-            #wipe out all the dataset
-            data = {"id": id, "start_date": start_date, "end_date": end_date}
-            data["git"] = []
-            data["phabricator"] = []
-            data["mediawiki"] = {}
-            git_metadata = []
-            ph_metadata = {}
-        else:
-            #git metadata
-            git_metadata = []
-            for g in data["git"]:
-                git_metadata.append(g["repo"])
-            #loading phabrictor metadata
-            ph_metadata = {}
-            for p in data["phabricator"]:
-                ph_metadata[p["id"]] = p["phids"]
+        #if data != None the metadata exists
+        #git metadata
+        git_metadata = old_metadata["git_repos"]
+        #loading phabrictor metadata
+        ph_metadata = old_metadata["phab_groups"]
+        mediawiki_old_blacklist = old_metadata["mediawiki_blacklist"]
 
     #getting data from git
     print("Fetching git data...")
@@ -132,7 +120,8 @@ def fetch_data(id, start_date, end_date, repos, phab_groups, mediawiki_langs, me
         else:
             print("Deleted mediawiki lang {}".format(omd))
     for mlang in mediawiki_langs:
-        if mlang not in data["mediawiki"]:
+        if mlang not in data["mediawiki"] or set(
+            mediawiki_old_blacklist).symmetric_difference(set(mediawiki_blacklist)) !=set():
             print("Fetching lang: {}".format(mlang))
             new_mediawiki_data[mlang] = mp.get_mediawiki_stats(mlang,
                                         start_date, end_date, mediawiki_blacklist)
