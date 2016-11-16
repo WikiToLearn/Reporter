@@ -59,7 +59,7 @@ def get_new_users_number(lang, start_date, end_date ):
                          params=params).json()
         new_users += r["query"]["logevents"]
         if "continue" in r:
-            params["rccontinue"] = r["continue"]["rccontinue"]
+            params["lecontinue"] = r["continue"]["lecontinue"]
             print('#')
         else:
             break

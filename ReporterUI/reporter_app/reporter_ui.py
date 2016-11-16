@@ -33,6 +33,7 @@ def report(id):
 def last_report():
     id =  dagg.get_last_report()["id"]
     return redirect(url_for("report", id=id))
+    
 
 
 @app.route('/', methods=['GET'])
