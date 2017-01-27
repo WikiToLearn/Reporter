@@ -2,7 +2,8 @@
 import json
 import requests
 import datetime
-import providers.provider_config as pconfig
+import yaml
+pconfig = yaml.load(open('/etc/reporter_providers.conf','r'))
 
 api_token = pconfig.phabricator_api_token
 

@@ -1,6 +1,8 @@
 import requests
-import providers.provider_config as pconfig
 import datetime
+import yaml
+
+pconfig = yaml.load(open('/etc/reporter_providers.conf','r'))
 
 def get_recentchanges_data(lang, start_date, end_date):
     params = {"action":"query",

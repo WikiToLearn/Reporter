@@ -1,8 +1,8 @@
 import requests
 import datetime
 import time
-import providers.provider_config as pconfig
-
+import yaml
+pconfig = yaml.load(open('/etc/reporter_providers.conf','r'))
 
 def get_contributes_per_user(repo, start_date, end_date):
     while True:
