@@ -11,7 +11,7 @@ def manager():
 def report(id):
     #getting data
     data = dagg.get_report_data(id)
-    if data == None:
+    if data is None:
         return abort(404)
     metadata = dagg.get_report_metadata(id)
     #total statistics
@@ -40,3 +40,7 @@ def last_report():
 def index():
     return render_template('index.template',
                            reports = dagg.get_reports_list("published"))
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.template'), 404

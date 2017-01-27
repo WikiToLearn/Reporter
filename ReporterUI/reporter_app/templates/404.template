@@ -1,0 +1,8 @@
+{#  _reporter_app/templates/index.template_ #}
+{% extends "layout.template" %}
+{% block title %}Ops...{% endblock %}
+{% block container %}
+
+
+
+{% endblock %}
