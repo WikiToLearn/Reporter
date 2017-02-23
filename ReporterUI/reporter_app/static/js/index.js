@@ -29,9 +29,9 @@ $(document).ready(function() {
     	template: '#git-commits',
     	props: [ 'commits'],
 
-        methods: {
-            filtercommits: function(commits){
-                return commits.filter( function(cm){
+        computed: {
+            filteredcommits: function(){
+                return this.commits.filter( function(cm){
                     if (git_data.commitQuery != null && git_data.commitQuery != ""){
                         var patt = new RegExp(git_data.commitQuery);
                         return patt.test(cm.commit.message);
