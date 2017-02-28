@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM wikitolearn/python35:0.1
 
 RUN apt-get update && \
   apt-get -y install cron && \
