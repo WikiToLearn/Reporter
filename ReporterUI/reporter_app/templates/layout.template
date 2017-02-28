@@ -40,7 +40,7 @@
         <div class="col-md-12">
             <header class="header">
                 <div style="margin-top: 15px; margin-bottom:-10px;">
-                    <a href="/"> <img src="//i.imgur.com/UpuaNZD.png" class="center-block img-responsive" /></a>
+                    <a href="/"> <img src="/static/img/logo.png" class="center-block img-responsive" /></a>
                     <!-- <h3 style="text-align:center;">WikiToLearn Reports</h3> -->
                 </div>
             </header>
