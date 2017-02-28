@@ -14,7 +14,7 @@ import wtl
 
 pconfig = yaml.load(open('/etc/reporter-providers.conf','r'))
 
-notify_config = pconfig["notify_config"]
+notify_config = pconfig["gateway"]
 
 #init the db client
 client = MongoClient(config.DB_HOST, config.DB_PORT)
