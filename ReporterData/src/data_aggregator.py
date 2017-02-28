@@ -28,8 +28,12 @@ def update_settings():
     #getting previous metadata_id
     previous_metadata = list(db["reports_metadata"].find({}))
     new_ids = []
-    for repo in glob.glob(config.metadata_dir+"/*.yaml"):
-        meta = yaml.load(open(repo, "r"))
+    for rep_def in glob.glob(config.metadata_dir+"/*.yaml"):
+        try:
+            meta = yaml.load(open(rep_def, "r"))
+        except:
+            wtl.send_notify({"data": "Error while reading config {}".format(rep_def)}, "test", notify_config)
+            continue
         print(">>> Reading report: {}".format(meta["id"]))
         new_ids.append(meta["id"])
         fetch_data(meta["id"], meta["start_date"],
