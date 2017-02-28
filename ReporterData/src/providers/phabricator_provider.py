@@ -5,7 +5,7 @@ import datetime
 import yaml
 pconfig = yaml.load(open('/etc/reporter-providers.conf','r'))
 
-api_token = pconfig['phabricator_api_token']
+api_token = pconfig['sources']['phabricator_api_token']
 
 def lookup_project_phabid_byname(name):
     return_phab_project_id = None

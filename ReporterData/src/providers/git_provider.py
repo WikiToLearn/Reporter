@@ -7,7 +7,7 @@ pconfig = yaml.load(open('/etc/reporter-providers.conf','r'))
 def get_contributes_per_user(repo, start_date, end_date):
     while True:
         r = requests.get("https://api.github.com/repos/"+repo+ "/stats/contributors",
-                         auth=(pconfig['github_user'], pconfig['github_token']))
+                         auth=(pconfig['sources']['github_user'], pconfig['sources']['github_token']))
         print(repo + " - " + str(r.status_code))
         if r.status_code == 202:
             time.sleep(2)

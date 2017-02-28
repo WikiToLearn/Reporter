@@ -17,7 +17,7 @@ def get_recentchanges_data(lang, start_date, end_date):
               "rclimit": 100}
     rclist_edit = []
     while True:
-        r = requests.get(pconfig['mediawiki_api_url'].format(lang),
+        r = requests.get(pconfig['sources']['mediawiki_api_url'].format(lang),
                          params=params).json()
         rclist_edit += r["query"]["recentchanges"]
         if "continue" in r:
@@ -32,7 +32,7 @@ def get_recentchanges_data(lang, start_date, end_date):
     print("getting new pages")
     rclist_new = []
     while True:
-        r = requests.get(pconfig['mediawiki_api_url'].format(lang),
+        r = requests.get(pconfig['sources']['mediawiki_api_url'].format(lang),
                          params=params).json()
         rclist_new += r["query"]["recentchanges"]
         if "continue" in r:
@@ -57,7 +57,7 @@ def get_new_users_number(lang, start_date, end_date ):
               "rclimit": 100}
     new_users = []
     while True:
-        r = requests.get(pconfig['mediawiki_api_url'].format(lang),
+        r = requests.get(pconfig['sources']['mediawiki_api_url'].format(lang),
                          params=params).json()
         new_users += r["query"]["logevents"]
         if "continue" in r:
