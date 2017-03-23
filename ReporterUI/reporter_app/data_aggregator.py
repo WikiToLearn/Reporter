@@ -3,6 +3,8 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 from bson.json_util import dumps
 import json
+import logging
+from . import queries
 from . import config
 
 #init the db client
@@ -40,3 +42,10 @@ def get_previous_reports(id):
         else:
             break
     return previous
+
+def get_history(collection, user_stats, params):
+    if user_stats:
+        query = queries.get_collection_user_query(collection, params)
+    else:
+        query = queries.get_collection_query(collection, params)
+    return (str(query), list(db["reports_data"].aggregate(query)))
