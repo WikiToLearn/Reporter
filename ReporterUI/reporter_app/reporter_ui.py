@@ -1,8 +1,25 @@
 from reporter_app import app
-from flask import render_template, jsonify, request, abort, redirect, url_for
+from flask import render_template, request, abort, redirect, url_for
 import datetime
+from flask.json import JSONEncoder
 import logging
 import reporter_app.data_aggregator as dagg
+import json
+from bson.objectid import ObjectId
+from werkzeug import Response
+
+class MongoJsonEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, (datetime.datetime, datetime.date)):
+            return obj.strftime("%Y-%m-%d %H:%M:%S")
+        elif isinstance(obj, ObjectId):
+            return unicode(obj)
+        return json.JSONEncoder.default(self, obj)
+
+def jsonify(lis):
+    """ jsonify with support for MongoDB ObjectId
+    """
+    return Response(json.dumps(lis, cls=MongoJsonEncoder), mimetype='application/json')
 
 @app.route('/manager', methods=['GET'])
 def manager():
