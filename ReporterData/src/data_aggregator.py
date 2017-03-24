@@ -32,7 +32,7 @@ def update_settings():
         try:
             meta = yaml.load(open(rep_def, "r"))
         except:
-            wtl.send_notify({"data": "Error while reading config {}".format(rep_def)}, "test", notify_config)
+            wtl.send_notify({"message": "Error while reading config {}".format(rep_def)}, "report_error", notify_config)
             continue
         print(">>> Reading report: {}".format(meta["id"]))
         new_ids.append(meta["id"])
@@ -56,7 +56,7 @@ def fetch_data(id, start_date, end_date, repos, phab_groups, mediawiki_langs, me
     data = db["reports_data"].find_one({"id":id})
     old_metadata = db["reports_metadata"].find_one({"id":id})
     if data == None or data["start_date"]!= start_date or data["end_date"]!=end_date:
-        wtl.send_notify({"data": "Creating report {}".format(id)}, "test", notify_config)
+        wtl.send_notify({"report_id": id}, "report_new", notify_config)
         data = {"id": id, "start_date": start_date, "end_date": end_date}
         data["git"] = []
         data["phabricator"] = []
@@ -85,7 +85,8 @@ def fetch_data(id, start_date, end_date, repos, phab_groups, mediawiki_langs, me
     #adding new requested repos
     for repo in repos:
         if repo not in git_metadata:
-            wtl.send_notify({"data": "Adding git {} to report {}".format(repo,id)}, "test", notify_config)
+            wtl.send_notify({"resource_type": "git", "resource_name": repo, "report_id":id},
+                            "report_add_data", notify_config)
             new_git_data.append(gp.get_complete_stats(repo, start_date, end_date))
     #saving new data
     data["git"] = new_git_data
@@ -109,11 +110,13 @@ def fetch_data(id, start_date, end_date, repos, phab_groups, mediawiki_langs, me
     for ph_gr in phab_groups:
         if ph_gr in ph_metadata:
             if  phab_groups[ph_gr] != ph_metadata[ph_gr]:
-                wtl.send_notify({"data": "Updating phab group {} to report {}".format(ph_gr,id)}, "test", notify_config)
+                wtl.send_notify({"resource_type": "phabricator group", "resource_name": ph_gr, "report_id":id},
+                                "report_update_data", notify_config)
                 new_phab_data.append(pp.calculate_generic_stats(ph_gr,phab_groups[ph_gr],
                                                      start_date, end_date))
         else:
-            wtl.send_notify({"data": "Adding phab group {} to report {}".format(ph_gr,id)}, "test", notify_config)
+            wtl.send_notify({"resource_type": "phabricator group", "resource_name": ph_gr, "report_id":id},
+                            "report_add_data", notify_config)
             new_phab_data.append(pp.calculate_generic_stats(ph_gr,phab_groups[ph_gr],
                                                  start_date, end_date))
     #saving new data
@@ -134,7 +137,8 @@ def fetch_data(id, start_date, end_date, repos, phab_groups, mediawiki_langs, me
             print("Deleted mediawiki lang {}".format(omd))
     for mlang in mediawiki_langs:
         if mlang not in data["mediawiki"] or set(mediawiki_old_blacklist).symmetric_difference(set(mediawiki_blacklist)) !=set():
-            wtl.send_notify({"data": "Fetching mediawiki lang {} to report {}".format(mlang,id)}, "test", notify_config)
+            wtl.send_notify({"resource_type": "mediawiki", "resource_name": mlang, "report_id":id},
+                            "report_add_data", notify_config)
             print("Fetching lang: {}".format(mlang))
             new_mediawiki_data[mlang] = mp.get_mediawiki_stats(mlang,
                                         start_date, end_date, mediawiki_blacklist)
