@@ -43,9 +43,14 @@ def get_previous_reports(id):
             break
     return previous
 
-def get_history(collection, user_stats, params):
-    if user_stats:
-        query = queries.get_collection_user_query(collection, params)
-    else:
-        query = queries.get_collection_query(collection, params)
+def get_history_user(collection, params):
+    query = queries.get_collection_user_query(collection, params)
+    return (str(query), list(db["reports_data"].aggregate(query)))
+
+def get_history_element(collection, params):
+    query = queries.get_collection_query(collection, params)
+    return (str(query), list(db["reports_data"].aggregate(query)))
+
+def get_history_total(collection):
+    query = queries.get_collection_totals_query(collection)
     return (str(query), list(db["reports_data"].aggregate(query)))

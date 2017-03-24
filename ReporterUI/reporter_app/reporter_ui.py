@@ -53,7 +53,6 @@ def last_report():
     return redirect(url_for("report", id=id))
 
 
-
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.template',
@@ -67,9 +66,11 @@ def page_not_found(e):
 def get_history():
     options = request.get_json()
     app.logger.info(str(options))
-    if options["user_stats"] in ["true","True", "yes", "1", "Y"]:
-        query, result = dagg.get_history(options["collection"], True, options)
-    else:
-        query, result = dagg.get_history(options["collection"], False, options)
+    if options["stats"] == "user":
+        query, result = dagg.get_history_user(options["collection"], options)
+    elif options["stats"] == "element":
+        query, result = dagg.get_history_element(options["collection"], options)
+    elif options["stats"] == "total":
+        query, result = dagg.get_history_total(options["collection"])
     app.logger.info("Quering history: {}".format(query))
     return jsonify(result)

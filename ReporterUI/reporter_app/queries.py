@@ -45,7 +45,7 @@ def get_projection(collection, lang=""):
                 "n_commits": "$git.n_commits"
                 }
             }
-    elif collection == "totals_mediawiki":
+    elif collection == "users_mediawiki":
         return {
             "$project": {
             "end_date":1,
@@ -59,7 +59,7 @@ def get_projection(collection, lang=""):
             "score":     "$totals_mediawiki.users_stats.score"
             }
         }
-    elif collection == "totals_phab":
+    elif collection == "users_phab":
         return {
             "$project": {
             "end_date":1,
@@ -73,7 +73,7 @@ def get_projection(collection, lang=""):
             "closed": "$totals_phab.users_stats.closed"
             }
         }
-    elif collection == "totals_git":
+    elif collection == "users_git":
         return {
             "$project": {
             "end_date":1,
@@ -85,6 +85,48 @@ def get_projection(collection, lang=""):
             "n_commits": "$totals_git.users_stat.total_commits"
             }
         }
+    elif collection == "totals_mediawiki":
+        return {
+            "$project": {
+            "end_date":1,
+            "id": 1,
+            "_id": 0,
+            "new_pages": "$totals_mediawiki.total_new_pages",
+            "edits":     "$totals_mediawiki.total_edits",
+            "additions": "$totals_mediawiki.total_additions",
+            "new_users": "$totals_mediawiki.total_new_users",
+            "deletions": "$totals_mediawiki.total_deletions",
+            "editors":   "$totals_mediawiki.total_users"
+            }
+        }
+    elif collection == "totals_phabricator":
+        return {
+            "$project":{
+                "end_date":1,
+                "id": 1,
+                "_id": 0,
+                "opened": "$totals_phab.opened",
+                "changed": "$totals_phab.changed",
+                "total_close": "$totals_phab.total_close",
+                "total_open": "$totals_phab.total_open",
+                "resolved": "$totals_phab.resolved",
+                "comments": "$totals_phab.comments",
+                "not_resolved": "$totals_phab.not_resolved",
+                "closed": "$totals_phab.closed"
+                }
+            }
+    elif collection == "totals_git":
+        return {
+            "$project":{
+                "end_date":1,
+                "id": 1,
+                "_id": 0,
+                "additions": "$totals_git.total_additions",
+                "deletions": "$totals_git.total_deletions",
+                "n_commits": "$totals_git.total_commits"
+                }
+            }
+
 
 
 def get_collection_query(collection, params):
@@ -112,6 +154,12 @@ def get_collection_user_query(collection, params):
         {"$project": {coll_name : 1, "end_date":1, "_id":0, "id":1}},
         {"$unwind": "${}.users_stats".format(coll_name)},
         {"$match": {"{}.users_stats.username".format(coll_name): params["username"]}},
-        get_projection(coll_name),
+        get_projection("users_"+collection),
         {"$sort": {"end_date":1}}
     ]
+
+def get_collection_totals_query(collection):
+    return [
+        get_projection("totals_"+collection),
+        {"$sort": {"end_date":1}}
+        ]
