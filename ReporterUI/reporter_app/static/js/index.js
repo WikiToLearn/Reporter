@@ -106,4 +106,19 @@ $(document).ready(function() {
         }
 
     );
+    /* Plots */
+    var gitResponse, mediawikiResponse, phabricatorResponse;
+    // Set the json for the requests
+    var gitData = {
+        'stats': 'total',
+        'collection': 'git'
+    };
+    var mediawikiData = {
+        'stats': 'total',
+        'collection': 'mediawiki'
+    };
+    var phabricatorData = {
+        'stats': 'total',
+        'collection': 'phabricator'
+    };
 });
