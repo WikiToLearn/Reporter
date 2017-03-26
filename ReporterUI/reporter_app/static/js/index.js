@@ -121,6 +121,99 @@ $(document).ready(function() {
         'stats': 'total',
         'collection': 'phabricator'
     };
+
+    $.when(
+        // Get the total commits via ajax request
+        $.ajax({
+            type: "POST",
+            url: "/history",
+            data: JSON.stringify(gitData),
+            contentType: "application/json",
+            dataType: "json",
+            success: function(data) {
+                gitResponse = data;
+            },
+            error: function(data) {
+                console.log("Failed to load git data for plotly.");
+            }
+        }),
+        $.ajax({
+            type: "POST",
+            url: "/history",
+            data: JSON.stringify(mediawikiData),
+            contentType: "application/json",
+            dataType: "json",
+            success: function(data) {
+                mediawikiResponse = data;
+            },
+            error: function(data) {
+                console.log("Failed to load git data for plotly.");
+            }
+        }),
+        $.ajax({
+            type: "POST",
+            url: "/history",
+            data: JSON.stringify(phabricatorData),
+            contentType: "application/json",
+            dataType: "json",
+            success: function(data) {
+                phabricatorResponse = data;
+            },
+            error: function(data) {
+                console.log("Failed to load git data for plotly.");
+            }
+        })
+    ).then(function () {
+        // Get the column data for git 
+        var gitTimes = gitResponse.map(function(item) {
+            return item.end_date;
+        });
+        var n_commits = gitResponse.map(function(item) {
+            return item.n_commits;
+        });
+        // Get the column data for mediawiki 
+        var mediawikiTimes = mediawikiResponse.map(function(item) {
+            return item.end_date;
+        });
+        var edits = mediawikiResponse.map(function(item) {
+            return item.edits;
+        });
+        // Get the column data for phabricator 
+        var phabricatorTimes = phabricatorResponse.map(function(item) {
+            return item.end_date;
+        });
+        var tasks = phabricatorResponse.map(function(item) {
+            return item.resolved;
+        });
+        // Set the default trace data for the plots
+        trace = {
+            x: gitTimes,
+            y: n_commits,
+            mode: 'line',
+            name: '',
+            visible: true,
+            line: {
+                shape: 'spline',
+                color: ''
+            }
+        }; 
+        // Set the custom option for the github plot
+        gitTrace = trace;
+        gitTrace.name = 'Github';
+        gitTrace.line.color = '#69b140';
+
+        mediawikiTrace = trace;
+        mediawikiTrace.name = 'WikiToLearn';
+        mediawikiTrace.line.color = '#ffbc31';
+
+        phabricatorTrace = trace;
+        phabricatorTrace.name = 'Phabricator';
+        phabricatorTrace.line.color = '#db3e14'; 
+
+        // Pack the data and send it to the plotting function
+        data = [gitTrace, mediawikiTrace, phabricatorTrace];
+        plotStats(data);
+    });
 });
 
 function plotStats(data) {
