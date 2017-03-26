@@ -187,26 +187,35 @@ $(document).ready(function() {
         });
         // Set the default trace data for the plots
         trace = {
-            x: gitTimes,
-            y: n_commits,
+            x: '',
+            y: '',
             mode: 'line',
             name: '',
-            visible: true,
+            visible: false,
             line: {
                 shape: 'spline',
                 color: ''
             }
         }; 
-        // Set the custom option for the github plot
-        gitTrace = trace;
+        // Set the custom option for the different plots
+        gitTrace = $.extend(true, {}, trace);
+        // This is the first plot a user will see, so it
+        // should be set as visible
+        gitTrace.visible = true;
+        gitTrace.x = gitTimes;
+        gitTrace.y = n_commits;
         gitTrace.name = 'Github';
         gitTrace.line.color = '#69b140';
 
-        mediawikiTrace = trace;
+        mediawikiTrace = $.extend(true, {}, trace);
+        mediawikiTrace.x = mediawikiTimes;
+        mediawikiTrace.y = edits;
         mediawikiTrace.name = 'WikiToLearn';
         mediawikiTrace.line.color = '#ffbc31';
 
-        phabricatorTrace = trace;
+        phabricatorTrace = $.extend(true, {}, trace);
+        phabricatorTrace.x = phabricatorTimes;
+        phabricatorTrace.y = tasks;
         phabricatorTrace.name = 'Phabricator';
         phabricatorTrace.line.color = '#db3e14'; 
 
@@ -214,54 +223,55 @@ $(document).ready(function() {
         data = [gitTrace, mediawikiTrace, phabricatorTrace];
         plotStats(data);
     });
+
+    function plotStats(data) {
+        var d3 = Plotly.d3;
+        var WIDTH_IN_PERCENT_OF_PARENT = 100,
+            HEIGHT_IN_PERCENT_OF_PARENT = 40;
+
+        // bind to new element and use it to plot data
+        var gd3 = d3.select('#global-stats-plot')
+                    .style({
+                        width: WIDTH_IN_PERCENT_OF_PARENT + '%',
+                        height: HEIGHT_IN_PERCENT_OF_PARENT + 'rem',
+                        'margin-top': '3 rem'
+                    });
+        var gd = gd3.node()
+
+        // Call the plotting function and define the dropdown
+        // buttons
+        Plotly.plot(gd, data, {
+            updatemenus: [{
+                y: 1,
+                x: -0.1,
+                yanchor: 'top',
+                buttons: [{
+                    method: 'restyle',
+                    args: ['visible', [true, false, false]],
+                    label: 'Github'
+                }, {
+                    method: 'restyle',
+                    args: ['visible', [false, true, false]],
+                    label: 'MediaWiki'
+                }, {
+                    method: 'restyle',
+                    args: ['visible', [false, false, true]],
+                    label: 'Phabricator'
+                }, {
+                    method: 'restyle',
+                    args: [{
+                        'visible': [true, true, true],
+                        'line.color': ['#ffbc31', '#6ab141', '#db3e14']
+                    }],
+                    label: 'All'
+                }]
+            }],
+        });
+
+        // Make the plot resposnsive
+        window.onresize = function() {
+            Plotly.Plots.resize(gd);
+        };
+    }
 });
 
-function plotStats(data) {
-    var d3 = Plotly.d3;
-    var WIDTH_IN_PERCENT_OF_PARENT = 100,
-        HEIGHT_IN_PERCENT_OF_PARENT = 40;
-
-    // bind to new element and use it to plot data
-    var gd3 = d3.select('#global-stats-plot')
-                .style({
-                    width: WIDTH_IN_PERCENT_OF_PARENT + '%',
-                    height: HEIGHT_IN_PERCENT_OF_PARENT + 'rem',
-                    'margin-top': '3 rem'
-                });
-    var gd = gd3.node()
-
-    // Call the plotting function and define the dropdown
-    // buttons
-    Plotly.plot(gd, data, {
-        updatemenus: [{
-            y: 1,
-            x: -0.1,
-            yanchor: 'top',
-            buttons: [{
-                method: 'restyle',
-                args: ['visible', [true, false, false]],
-                label: 'Github'
-            }, {
-                method: 'restyle',
-                args: ['visible', [false, true, false]],
-                label: 'MediaWiki'
-            }, {
-                method: 'restyle',
-                args: ['visible', [false, false, true]],
-                label: 'Phabricator'
-            }, {
-                method: 'restyle',
-                args: [{
-                    'visible': [true, true, true],
-                    'line.color': ['#ffbc31', '#6ab141', '#db3e14']
-                }],
-                label: 'All'
-            }]
-        }],
-    });
-
-    // Make the plot resposnsive
-    window.onresize = function() {
-        Plotly.Plots.resize(gd);
-    };
-}
