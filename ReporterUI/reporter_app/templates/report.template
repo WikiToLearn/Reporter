@@ -47,7 +47,8 @@
 
         <h2 style="text-align:center;"><span class="glyphicon glyphicon-stats" aria-hidden="true">&nbsp;</span>Statistics</h2>
         <div class="clearfix"></div>
-        <p><h3>Content editing</h3></p>
+        <div id="global-stats-plot"></div>
+        <p class="content-editing"><h3>Content editing</h3></p>
 
         <div class="col-md-12">
             <p style="text-align:center;" class="lead">Language portals</p>
